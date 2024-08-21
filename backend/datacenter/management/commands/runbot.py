@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from telegram_bot.bot_new import main
+# from telegram_bot.bot_new import main
 
 
 class Command(BaseCommand):
@@ -7,4 +7,4 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         self.stdout.write("Запуск бота...")
-        main()
+        # main()

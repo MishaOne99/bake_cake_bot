@@ -104,7 +104,7 @@ for title in cakes_titles:
     decor = random.choice(decors)
     Cake.objects.create(
         title=title,
-        price=level.get('price')+form.get('price')+topping.price+berry.price+decor.price,
+        price=level.price+form.price+topping.price+berry.price+decor.price,
         level=level,
         form=form,
         topping=topping,

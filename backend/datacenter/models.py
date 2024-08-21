@@ -4,6 +4,7 @@ import datetime as dt
 
 
 class Client(models.Model):
+
     id_tg = models.IntegerField(
         "id в телеграмм", blank=True, null=True, unique=True
     )
@@ -19,6 +20,7 @@ class Client(models.Model):
 
 
 class Level(models.Model):
+
     title = models.CharField("Название уровня", max_length=200)
     price = models.FloatField('Цена')
 
