@@ -108,7 +108,7 @@ class Cake(models.Model):
     )
 
     def __str__(self) -> str:
-        return self.title
+        return self.title or 'Кастом'
 
     class Meta:
         verbose_name = 'Торт',
