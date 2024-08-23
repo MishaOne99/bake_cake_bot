@@ -1,33 +1,55 @@
-
-from datacenter.models import TimeFrames, Client, Level, Form, Topping, Decor, Cake, Berry, Order, Appointment
+import os
 import random
 
-# # # ! запуск через PowerShell команда - >>> exec(open("db_fake_data_fill.py", encoding="utf-8").read())
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "project.settings")
+
+import django
+django.setup()
+
+from datacenter.models import (
+    Address,
+    AdvLink,
+    Berry,
+    Cake,
+    Client,
+    Decor,
+    Form,
+    Invoice,
+    Level,
+    Order,
+    TimeFrames,
+    Topping,
+)
+
 
 # Создание временных рамок (по умолчанию)
 TimeFrames.objects.create()
 
 # Создание клиентов
-Client.objects.create(id_tg=100, full_name='Ричард', phone_number='+79004217012')
-Client.objects.create(id_tg=101, full_name='Егор', phone_number='+79004216012')
-Client.objects.create(id_tg=102, full_name='Александр', phone_number='+79004215012')
-Client.objects.create(id_tg=103, full_name='Николай', phone_number='+79004214012')
-Client.objects.create(id_tg=104, full_name='Виктория', phone_number='+79004213012')
-Client.objects.create(id_tg=105, full_name='Елизавета', phone_number='+79004212012')
-Client.objects.create(id_tg=106, full_name='Христина', phone_number='+79004211012')
-
-client1 = Client.objects.get(id_tg=100)
-client2 = Client.objects.get(id_tg=101)
-client3 = Client.objects.get(id_tg=102)
-client4 = Client.objects.get(id_tg=103)
-client5 = Client.objects.get(id_tg=104)
-client6 = Client.objects.get(id_tg=105)
-client7 = Client.objects.get(id_tg=106)
+Client.objects.create(
+    id_tg=100, full_name="Роман", phone_number="+79004217012"
+)
+Client.objects.create(id_tg=101, full_name="Егор", phone_number="+79004216012")
+Client.objects.create(
+    id_tg=102, full_name="Александр", phone_number="+79004215012"
+)
+Client.objects.create(
+    id_tg=103, full_name="Николай", phone_number="+79004214012"
+)
+Client.objects.create(
+    id_tg=104, full_name="Виктория", phone_number="+79004213012"
+)
+Client.objects.create(
+    id_tg=105, full_name="Елизавета", phone_number="+79004212012"
+)
+Client.objects.create(
+    id_tg=106, full_name="Кристина", phone_number="+79004211012"
+)
 
 # Создание уровней
 Level.objects.create(title="1 уровень", price=400)
-Level.objects.create(title="2 уровеня", price=750)
-Level.objects.create(title="3 уровеня", price=1100)
+Level.objects.create(title="2 уровня", price=750)
+Level.objects.create(title="3 уровня", price=1100)
 
 # Создание форм
 Form.objects.create(title="Квадрат", price=600)
@@ -50,7 +72,6 @@ Berry.objects.create(title="Голубика", price=450)
 Berry.objects.create(title="Клубника", price=500)
 
 # Создание декора
-
 Decor.objects.create(title="Фисташки", price=300)
 Decor.objects.create(title="Безе", price=400)
 Decor.objects.create(title="Фундук", price=350)
@@ -58,36 +79,36 @@ Decor.objects.create(title="Пекан", price=300)
 Decor.objects.create(title="Маршмеллоу", price=200)
 Decor.objects.create(title="Марципан", price=280)
 
-
+# Создание тортов
 cakes_titles = [
-    'Наполеон',
-    'Тирамису',
-    'Красный бархат',
-    'Медовик',
-    'Шоколадный мусс',
-    'Фруктовый сад',
-    'Морковный торт',
-    'Ванильное облако',
-    'Сметанник',
-    'Прага',
-    'Шарлотка',
-    'Ореховый рай',
-    'Капучино',
-    'Крем-брюле',
-    'Павлова'
+    "Наполеон",
+    "Тирамису",
+    "Красный бархат",
+    "Медовик",
+    "Шоколадный мусс",
+    "Фруктовый сад",
+    "Морковный торт",
+    "Ванильное облако",
+    "Сметанник",
+    "Прага",
+    "",
+    "Ореховый рай",
+    "Капучино",
+    "Крем-брюле",
+    "",
 ]
 
-cake_inscriptions = [
-    'С Днём Рождения!',
-    'Люблю тебя!',
-    'Сладкая жизнь',
-    'Счастья и радости!',
-    'Всегда вместе',
-    'Лучший день!',
-    'С юбилеем!',
-    'Дорогой маме',
-    'Вечная любовь',
-    'На долгую память'
+cake_captions = [
+    "С Днём Рождения!",
+    "Люблю тебя!",
+    "Сладкая жизнь",
+    "Счастья и радости!",
+    "Всегда вместе",
+    "Лучший день!",
+    "С юбилеем!",
+    "Дорогой маме",
+    "Вечная любовь",
+    "На долгую память",
 ]
 
 levels = list(Level.objects.all())
@@ -102,12 +123,72 @@ for title in cakes_titles:
     topping = random.choice(toppings)
     berry = random.choice(berries)
     decor = random.choice(decors)
+    caption = random.choice(cake_captions) if not title else ""
     Cake.objects.create(
         title=title,
-        price=level.price+form.price+topping.price+berry.price+decor.price,
+        price=level.price
+        + form.price
+        + topping.price
+        + berry.price
+        + decor.price,
         level=level,
         form=form,
         topping=topping,
         berry=berry,
-        decor=decor
+        decor=decor,
+        caption=caption,
+    )
+
+Address.objects.create(city="Москва", street="Тверская, 21", flat=23)
+Address.objects.create(city="Москва", street="Краснопресненская, 46", flat=355)
+Address.objects.create(
+    city="Люберцы", street="Октябрьский проспект, 101", flat=123
+)
+Address.objects.create(city="Химки", street="Калинина, 4А", flat=145)
+Address.objects.create(city="Одинцово", street="Маршала Жукова, 46", flat=299)
+
+# Создание заказов
+cakes = Cake.objects.all()
+clients = list(Client.objects.all())
+addresses = list(Address.objects.all())
+
+for cake in cakes:
+    client = random.choice(clients)
+    address = random.choice(addresses)
+    receipt_id = random.randint(100, 999)
+    receipt = f"https://receipt.com/id={receipt_id}"
+    day = random.randint(1, 24)
+    date = f"2024-08-{day:02d}"
+    hour = random.randint(9, 17)
+    minute = random.randint(1, 59)
+    time = f"{hour:02d}:{minute:02d}"
+    delivery_date = f"2024-08-{day+1:02d}"
+    delivery_time = f"{hour:02d}:00"
+
+    Invoice.objects.create(
+        client=client,
+        status="paid",
+        receipt=receipt,
+    )
+    invoice = Invoice.objects.last()
+
+    Order.objects.create(
+        status="accepted",
+        date=date,
+        time=time,
+        client=client,
+        cake=cake,
+        delivery_date=delivery_date,
+        delivery_time=delivery_time,
+        delivery_address=address,
+        invoice=invoice,
+        comment="Набрать за час до приезда. В дверь постучать 3 раза"
+        if cake.title
+        in [
+            "Наполеон",
+            "Тирамису",
+            "Красный бархат",
+            "Медовик",
+        ]
+        else "",
     )

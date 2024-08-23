@@ -1,7 +1,6 @@
 import datetime as dt
 
 from django.db import models
-from django.forms import ImageField
 from phonenumber_field.modelfields import PhoneNumberField
 
 
@@ -81,7 +80,9 @@ class Decor(models.Model):
 
 
 class Cake(models.Model):
-    title = models.CharField("Название торта", max_length=200)
+    title = models.CharField(
+        "Название торта", max_length=200, null=True, blank=True
+    )
     price = models.FloatField("Цена торта")
     image = models.ImageField("Изображение торта", null=True, blank=True)
     level = models.ForeignKey(
@@ -114,7 +115,7 @@ class Cake(models.Model):
     )
 
     def __str__(self) -> str:
-        return self.title
+        return self.title or "Кастом"
 
     class Meta:
         verbose_name = "Торт"
@@ -130,7 +131,7 @@ class Invoice(models.Model):
     client = models.ForeignKey(
         Client, on_delete=models.PROTECT, verbose_name="Клиент"
     )
-    status = models.CharField("Статус заказа", max_length=14, choices=STATUS)
+    status = models.CharField("Статус счета", max_length=14, choices=STATUS)
     receipt = models.URLField("Чек", blank=True)
     created_at = models.DateTimeField("Счёт выставлен", auto_now_add=True)
     updated_at = models.DateTimeField("Последнее обновление", auto_now=True)
@@ -163,8 +164,8 @@ class Order(models.Model):
         ("canceled", "Отменен"),
     ]
     status = models.CharField("Статус заказа", max_length=9, choices=STATUSES)
-    date = models.DateField("Дата заказа", auto_now_add=True)
-    time = models.TimeField("Время заказа", auto_now_add=True)
+    date = models.DateField("Дата заказа")
+    time = models.TimeField("Время заказа")
     client = models.ForeignKey(
         Client, on_delete=models.PROTECT, verbose_name="Клиент"
     )
@@ -211,6 +212,9 @@ class TimeFrames(models.Model):
     maximum_expedited_lead_time = models.IntegerField(
         "Максимальное время ускоренной доставки (в часах)", default=24
     )
+
+    def __str__(self) -> str:
+        return f"{self.workday_start}-{self.workday_end}, {self.minimum_lead_time}, {self.maximum_expedited_lead_time}"
 
     class Meta:
         verbose_name = "Временные рамки"
