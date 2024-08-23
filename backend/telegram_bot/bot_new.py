@@ -104,29 +104,25 @@ def start(update: Update, context: CallbackContext):
             )
         ],
     ]
+    start_message = """Здравствуйте!
+Заказы обрабатываются от {MINIMUM_LEDA_TIME} рабочих часов.
+Рабочие часы: с {WORKDAY_START} до {WOKRDAY_END} мск"""
 
     query = update.callback_query
     if query:
         query.answer()
         query.edit_message_text(
-            """Здравствуйте!
-Заказы обрабатываются от {MINIMUM_LEDA_TIME} рабочих часов.
-Рабочие часы: с {WORKDAY_START} до {WOKRDAY_END} мск""",
-            reply_markup=InlineKeyboardMarkup(keyboard),
+            start_message,
+            reply_markup=InlineKeyboardMarkup(keyboard)
         )
     else:
         update.message.reply_text(
-            # !!!!!!!!!!! берем время из бд first элемента
-            f"""Здравствуйте!
-Заказы обрабатываются от {MINIMUM_LEDA_TIME} рабочих часов.
-Рабочие часы: с {WORKDAY_START} до {WOKRDAY_END} мск""",
-            reply_markup=InlineKeyboardMarkup(keyboard),
+            start_message,
+            reply_markup=InlineKeyboardMarkup(keyboard)
         )
 
 
 def main():
-
-
     updater = Updater(settings.BOT_TOKEN, use_context=True)
     updater.dispatcher.add_handler(CommandHandler("start", start))
     updater.dispatcher.add_handler(
