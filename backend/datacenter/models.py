@@ -1,7 +1,6 @@
 import datetime as dt
 
 from django.db import models
-from django.forms import ImageField
 from phonenumber_field.modelfields import PhoneNumberField
 
 
@@ -81,7 +80,9 @@ class Decor(models.Model):
 
 
 class Cake(models.Model):
-    title = models.CharField("Название торта", max_length=200)
+    title = models.CharField(
+        "Название торта", max_length=200, null=True, blank=True
+    )
     price = models.FloatField("Цена торта")
     image = models.ImageField("Изображение торта", null=True, blank=True)
     level = models.ForeignKey(
@@ -114,7 +115,7 @@ class Cake(models.Model):
     )
 
     def __str__(self) -> str:
-        return self.title or 'Кастом'
+        return self.title or "Кастом"
 
     class Meta:
         verbose_name = "Торт"
@@ -130,7 +131,7 @@ class Invoice(models.Model):
     client = models.ForeignKey(
         Client, on_delete=models.PROTECT, verbose_name="Клиент"
     )
-    status = models.CharField("Статус заказа", max_length=14, choices=STATUS)
+    status = models.CharField("Статус счета", max_length=14, choices=STATUS)
     receipt = models.URLField("Чек", blank=True)
     created_at = models.DateTimeField("Счёт выставлен", auto_now_add=True)
     updated_at = models.DateTimeField("Последнее обновление", auto_now=True)
