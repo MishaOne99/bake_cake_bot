@@ -30,14 +30,15 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+time_frame = get_time_frame()
 # Время начала рабочего дня
-WORKDAY_START = None
+WORKDAY_START = time_frame.workday_start.hour
 # Время окончания рабочего дня
-WOKRDAY_END = None
+WOKRDAY_END = time_frame.workday_end.hour
 # Минимальное время доставки (в часах)
-MINIMUM_LEDA_TIME = None
+MINIMUM_LEDA_TIME = time_frame.minimum_lead_time
 # Максимальное время ускоренной доставки (в часах)
-MAXIMUM_EXPEDITED_LEAD_TIME = None
+MAXIMUM_EXPEDITED_LEAD_TIME = time_frame.maximum_expedited_lead_time
 
 URL_AGREEMENT = "https://disk.yandex.ru/i/8a4x4M9KB8A3qw"
 
@@ -108,29 +109,23 @@ def start(update: Update, context: CallbackContext):
     if query:
         query.answer()
         query.edit_message_text(
-            "Выберите услугу, салон или мастера",
+            """Здравствуйте!
+Заказы обрабатываются от {MINIMUM_LEDA_TIME} рабочих часов.
+Рабочие часы: с {WORKDAY_START} до {WOKRDAY_END} мск""",
             reply_markup=InlineKeyboardMarkup(keyboard),
         )
     else:
         update.message.reply_text(
             # !!!!!!!!!!! берем время из бд first элемента
             f"""Здравствуйте!
-            Заказы обрабатываются от {MINIMUM_LEDA_TIME} рабочих часов.
-            Рабочие часы: с {WORKDAY_START} до {WOKRDAY_END} мск""",
+Заказы обрабатываются от {MINIMUM_LEDA_TIME} рабочих часов.
+Рабочие часы: с {WORKDAY_START} до {WOKRDAY_END} мск""",
             reply_markup=InlineKeyboardMarkup(keyboard),
         )
 
 
 def main():
-    time_frame = get_time_frame()
-    # Время начала рабочего дня
-    WORKDAY_START = time_frame.workday_start
-    # Время окончания рабочего дня
-    WOKRDAY_END = time_frame.workday_end
-    # Минимальное время доставки (в часах)
-    MINIMUM_LEDA_TIME = time_frame.minimum_lead_time
-    # Максимальное время ускоренной доставки (в часах)
-    MAXIMUM_EXPEDITED_LEAD_TIME = time_frame.maximum_expedited_lead_time
+
 
     updater = Updater(settings.BOT_TOKEN, use_context=True)
     updater.dispatcher.add_handler(CommandHandler("start", start))
