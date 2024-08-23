@@ -3,7 +3,7 @@ import datetime as dt
 from datacenter.models import (
     TimeFrames, Client, Level, Form,
     Topping, Decor, Cake, Berry,
-    Order, Appointment
+    Order
 )
 
 import random

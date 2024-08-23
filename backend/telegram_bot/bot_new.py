@@ -43,22 +43,7 @@ MAXIMUM_EXPEDITED_LEAD_TIME = time_frame.maximum_expedited_lead_time
 URL_AGREEMENT = "https://disk.yandex.ru/i/8a4x4M9KB8A3qw"
 
 
-def reg_user(update: Update, context: CallbackContext):
-    query = update.callback_query
-    query.answer()
-    user = context.user_data["user_initial"]
-    if not check_client(user["id"]):
-        create_client(
-            user["id"],
-            user["first_name"],
-            user["last_name"],
-            user["username"],
-        )
-    context.user_data["client_id"] = user["id"]
-    start(update, context)
-
-
-def reg_user_request(update: Update, context: CallbackContext):
+def prestart_PD_request(update: Update, context: CallbackContext):
     context.user_data["user_initial"] = update.message.from_user
     if not check_client(context.user_data["user_initial"]["id"]):
         keyboard = [
@@ -76,35 +61,34 @@ def reg_user_request(update: Update, context: CallbackContext):
             reply_markup=InlineKeyboardMarkup(keyboard),
         )
     else:
-        start()
+        start(update, context)
+
+
+def reg_user(update: Update, context: CallbackContext):
+    user = context.user_data["user_initial"]
+    if not check_client(user["id"]):
+        create_client(
+            user["id"],
+            user["first_name"],
+            user["last_name"],
+            user["username"],
+        )
+    context.user_data["client_id"] = user["id"]
+    start(update, context)
 
 
 def start(update: Update, context: CallbackContext):
     context.user_data["client_id"] = update.effective_chat.id
     if not check_client(context.user_data["client_id"]):
-        reg_user_request(update, context)
+        prestart_PD_request(update, context)
         return
     keyboard = [
-        [
-            InlineKeyboardButton(
-                "Наши предложения", callback_data="list_cakes"
-            )
-        ],
-        [
-            InlineKeyboardButton("Рекомендация торта", callback_data="recomend_cake")
-        ],
-        [
-            InlineKeyboardButton(
-                "Собрать свой торт", callback_data="make_cake"
-            )
-        ],
-        [
-            InlineKeyboardButton(
-                "Заказы", callback_data="orders"
-            )
-        ],
+        [InlineKeyboardButton("Наши предложения", callback_data="list_cakes")],
+        [InlineKeyboardButton("Рекомендация торта", callback_data="recomend_cake")],
+        [InlineKeyboardButton("Собрать свой торт", callback_data="make_cake")],
+        [InlineKeyboardButton("Заказы", callback_data="orders")]
     ]
-    start_message = """Здравствуйте!
+    start_message = f"""Здравствуйте!
 Заказы обрабатываются от {MINIMUM_LEDA_TIME} рабочих часов.
 Рабочие часы: с {WORKDAY_START} до {WOKRDAY_END} мск"""
 
