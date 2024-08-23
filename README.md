@@ -1,8 +1,12 @@
 Старт проекта (инструкция):
 
 Создаем .venv 
+
+Пример для VS code:
+
 CTRL+SHIFT+P
-Python:Create Environment..
+
+"Python:Create Environment.."
 
 Версия Python 3.11.9.
 
