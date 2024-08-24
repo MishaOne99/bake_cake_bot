@@ -50,6 +50,7 @@ def show_cake(update: Update, context: CallbackContext):
     if not context.user_data.get("cake_id"):
         context.user_data["cake_id"] = query.data.split("_")[-1]
     cake = get_cake(context.user_data["cake_id"])
+
     chat_id = query.message.chat_id
     message_id = query.message.message_id
     # Удаляем старое сообщение
@@ -65,6 +66,7 @@ def show_cake(update: Update, context: CallbackContext):
 
         Цена: {cake.price} рублей
         """
+    context.user_data["cake_showed_back_step"] = "start"
     # Определяем кнопки
     keyboard = [
         [
