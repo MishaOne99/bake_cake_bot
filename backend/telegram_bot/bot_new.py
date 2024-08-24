@@ -14,8 +14,8 @@ from telegram.ext import (
     Updater,
 )
 
-from .recomend_cake import handlers_register
 from .db_querrys import check_client, create_client, get_time_frame
+from .show_cakes import handlers_register
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
@@ -39,15 +39,13 @@ URL_AGREEMENT = "https://disk.yandex.ru/i/8a4x4M9KB8A3qw"
 # Согласие на обработку ПД
 def prestart_PD_request(update: Update, context: CallbackContext):
     context.user_data["user_initial"] = update.message.from_user
-    keyboard = [
-        [InlineKeyboardButton("Согласен", callback_data="reg_user")]
-    ]
+    keyboard = [[InlineKeyboardButton("Согласен", callback_data="reg_user")]]
     welcome_message = f"""
-Добро пожаловать в бота магазина тортов\\!
-Для продолжения работы с ботом нам потребуется Ваше согласие на обработку персональных данных\\.
-С документом Вы можете ознакомиться [по ссылке]({URL_AGREEMENT})\\.
-Нажимая "Согласен" \\- Вы даёте своё согласие и можете продолжать пользоваться ботом\\.
-"""  # noqa: E501,
+        Добро пожаловать в бота магазина тортов\\!
+        Для продолжения работы с ботом нам потребуется Ваше согласие на обработку персональных данных\\.
+        С документом Вы можете ознакомиться [по ссылке]({URL_AGREEMENT})\\.
+        Нажимая "Согласен" \\- Вы даёте своё согласие и можете продолжать пользоваться ботом\\.
+        """
     update.message.reply_text(
         welcome_message,
         parse_mode=ParseMode.MARKDOWN_V2,
@@ -79,10 +77,10 @@ def start(update: Update, context: CallbackContext):
         prestart_PD_request(update, context)
         return
     keyboard = [
-        [InlineKeyboardButton("Наши предложения", callback_data="list_cakes")],
-        [InlineKeyboardButton("Рекомендация торта", callback_data="recomend_cake")],  # noqa: E501,
+        [InlineKeyboardButton("Готовые торты", callback_data="list_cakes")],
+        [InlineKeyboardButton("Рекомендуем", callback_data="recomend_cake")],
         [InlineKeyboardButton("Собрать свой торт", callback_data="make_cake")],
-        [InlineKeyboardButton("Заказы", callback_data="orders")]
+        [InlineKeyboardButton("Заказы", callback_data="orders")],
     ]
     start_message = f"""Здравствуйте!
 Заказы обрабатываются от {MINIMUM_LEDA_TIME} рабочих часов.
@@ -91,13 +89,11 @@ def start(update: Update, context: CallbackContext):
     if query:
         query.answer()
         query.edit_message_text(
-            start_message,
-            reply_markup=InlineKeyboardMarkup(keyboard)
+            start_message, reply_markup=InlineKeyboardMarkup(keyboard)
         )
     else:
         update.message.reply_text(
-            start_message,
-            reply_markup=InlineKeyboardMarkup(keyboard)
+            start_message, reply_markup=InlineKeyboardMarkup(keyboard)
         )
 
 

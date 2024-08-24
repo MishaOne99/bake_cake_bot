@@ -41,6 +41,10 @@ def create_client(id, first_name, last_name, username=None, phone_number=None):
     return id
 
 
+def get_cake(id):
+    return Cake.objects.get(id=id)
+
+
 def get_presets_cakes():
     return Cake.objects.filter(title__isnull=False)
 
