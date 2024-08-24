@@ -1,12 +1,16 @@
-import datetime as dt
+import random
 
 from datacenter.models import (
-    TimeFrames, Client, Level, Form,
-    Topping, Decor, Cake, Berry,
-    Order
+    Berry,
+    Cake,
+    Client,
+    Decor,
+    Form,
+    Level,
+    Order,
+    TimeFrames,
+    Topping,
 )
-
-import random
 
 
 def get_time_frame():
