@@ -219,15 +219,12 @@ class TimeFrames(models.Model):
 
 class AdvLink(models.Model):
     url = models.URLField("Ссылка")
+    short_url = models.URLField('Сокращенная ссылка', blank=True)
     visits_number = models.IntegerField(
         "Количество визитов",
-        null=True,
-        blank=True,
+        default=0
     )
 
-    def __str__(self) -> str:
-        return self.url
-
     class Meta:
-        verbose_name = "Рекламная ссылка"
+        verbose_name = "Рекламную ссылку"
         verbose_name_plural = "Рекламные ссылки"
