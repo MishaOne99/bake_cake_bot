@@ -57,17 +57,37 @@ def get_levels():
     return Level.objects.all()
 
 
+def get_level(id):
+    return Level.objects.get(id=id)
+
+
 def get_forms():
     return Form.objects.all()
+
+
+def get_form(id):
+    return Form.objects.get(id=id)
 
 
 def get_toppings():
     return Topping.objects.all()
 
 
+def get_topping(id):
+    return Topping.objects.get(id=id)
+
+
 def get_berries():
     return Berry.objects.all()
 
 
+def get_berry(id):
+    return Berry.objects.get(id=id)
+
+
 def get_decors():
     return Decor.objects.all()
+
+
+def get_decor(id):
+    return Decor.objects.get(id=id)
