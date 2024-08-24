@@ -101,7 +101,7 @@ cakes_titles = [
     "",
 ]
 
-
+# для сервера
 image_mapping = {
     "napoleon.jpg": "Наполеон",
     "tiramisu.jpg": "Тирамису",
@@ -117,6 +117,25 @@ image_mapping = {
     "kappuchino.jpg": "Капучино",
     "krem-bryule.jpg": "Крем-брюле",
     "custom.jpg": None,  # Пропуск
+}
+
+# для тестов
+
+image_mapping = {
+    "https://narodny-konditer.ru/img/gall/big/516.jpg": "Морковный",
+    "https://narodny-konditer.ru/img/gall/big/513.jpg": "Тирамису Миланский",
+    "https://narodny-konditer.ru/img/gall/big/1124.jpg": "Манго",
+    "https://narodny-konditer.ru/img/gall/big/1018.jpg": "Пломбир-Малина",
+    "https://narodny-konditer.ru/img/gall/big/1078.jpg": "Муссовый",
+    "https://narodny-konditer.ru/img/gall/big/1445.jpg": "Три Шоколада",
+    "https://narodny-konditer.ru/img/gall/big/480.jpg": "Кокосовый",
+    "https://narodny-konditer.ru/img/gall/big/1075.jpg": "С Арахисом",
+    "https://narodny-konditer.ru/img/gall/big/1072.jpg": "Медовик со сметанным кремом",
+    "https://narodny-konditer.ru/img/gall/big/1448.jpg": "Муэла Дольче",
+    "https://narodny-konditer.ru/img/gall/big/1063.jpg": "Пломбир",
+    "https://narodny-konditer.ru/img/gall/big/492.jpg": "Миндальный",
+    "https://narodny-konditer.ru/img/gall/big/1102.jpg": "Черный лес",
+    "https://narodny-konditer.ru/img/gall/big/531.jpg": None,  # Пропуск
 }
 
 cake_captions = [

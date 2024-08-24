@@ -14,7 +14,7 @@ from telegram.ext import (
     Updater,
 )
 
-
+from .recomend_cake import handlers_register
 from .db_querrys import check_client, create_client, get_time_frame
 
 logging.basicConfig(
@@ -110,5 +110,6 @@ def main():
     updater.dispatcher.add_handler(
         CallbackQueryHandler(reg_user, pattern="^reg_user$")
     )
+    updater.dispatcher = handlers_register(updater)
     updater.start_polling()
     updater.idle()
