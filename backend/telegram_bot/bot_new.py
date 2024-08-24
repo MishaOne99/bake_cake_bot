@@ -25,13 +25,18 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 time_frame = get_time_frame()
+time_frame = get_time_frame()
 # Время начала рабочего дня
+WORKDAY_START = time_frame.workday_start.hour
 WORKDAY_START = time_frame.workday_start.hour
 # Время окончания рабочего дня
 WOKRDAY_END = time_frame.workday_end.hour
+WOKRDAY_END = time_frame.workday_end.hour
 # Минимальное время доставки (в часах)
 MINIMUM_LEDA_TIME = time_frame.minimum_lead_time
+MINIMUM_LEDA_TIME = time_frame.minimum_lead_time
 # Максимальное время ускоренной доставки (в часах)
+MAXIMUM_EXPEDITED_LEAD_TIME = time_frame.maximum_expedited_lead_time
 MAXIMUM_EXPEDITED_LEAD_TIME = time_frame.maximum_expedited_lead_time
 
 URL_AGREEMENT = "https://disk.yandex.ru/i/8a4x4M9KB8A3qw"
