@@ -5,15 +5,16 @@
 # Пожелание для доставщика
 
 # Вывод заказов для пользователя
+import datetime as dt
+
 from telegram import (
     InlineKeyboardButton,
     InlineKeyboardMarkup,
-    Update,
+    KeyboardButton,
     ReplyKeyboardMarkup,
     ReplyKeyboardRemove,
-    KeyboardButton
+    Update,
 )
-    
 from telegram.ext import (
     CallbackContext,
     CallbackQueryHandler,
@@ -25,6 +26,7 @@ from telegram.ext import (
 
 from .common_handler_functions import build_button_table
 from .db_querrys import (
+    check_and_add_phone_number,
     get_berries,
     get_berry,
     get_decor,
@@ -35,7 +37,12 @@ from .db_querrys import (
     get_levels,
     get_topping,
     get_toppings,
-    check_and_add_phone_number
+)
+from .start import (
+    MAXIMUM_EXPEDITED_LEAD_TIME,
+    MINIMUM_LEDA_TIME,
+    WOKRDAY_END,
+    WORKDAY_START,
 )
 
 
@@ -63,37 +70,129 @@ def get_data_for_cake(update: Update, context: CallbackContext):
 
 
 def get_cake_caption(update: Update, context: CallbackContext):
-    query = update.callback_query
-    context.user_data["cake_caption"] = update.message.text if update.message else None
-    chat_id = query.message.chat_id
-    message_id = query.message.message_id
-    context.bot.delete_message(chat_id=chat_id, message_id=message_id)
-    chat_id = update.effective_chat.id
-    context.bot.send_message(
-        chat_id=chat_id,
-        text="Укажите адрес доставки:",
+    context.user_data["cake_caption"] = (
+        update.message.text if update.message else ""
     )
+    query = update.callback_query
+    if query:
+        query.answer()
+        query.edit_message_text(
+            "Укажите адрес доставки:",
+        )
+    else:
+        context.bot.send_message(
+            chat_id=chat_id,
+            text="Укажите адрес доставки:",
+        )
+
     return "get_delivery_address"
 
 
 def get_delivery_address(update: Update, context: CallbackContext):
     context.user_data["delivery_address"] = update.message.text
-    chat_id = update.effective_chat.id
-    context.bot.send_message(
-        chat_id=chat_id,
-        text="Комментарий для курьера",
-    )
+    query = update.callback_query
+    button = [
+        [InlineKeyboardButton("Пропустить", callback_data="skip_comment")]
+    ]
+    if query:
+        query.answer()
+        query.edit_message_text(
+            text="Комментарий для курьера",
+            reply_markup=InlineKeyboardMarkup(button),
+        )
+    else:
+        chat_id = update.effective_chat.id
+        context.bot.send_message(
+            chat_id=chat_id,
+            text="Комментарий для курьера",
+            reply_markup=InlineKeyboardMarkup(button),
+        )
+
     return "get_comment"
 
 
 def get_comment(update: Update, context: CallbackContext):
-    context.user_data["delivery_comment"] = update.message.text
-    make_order(update, context)
-    context.user_data['get_number_in_progress'] = True
+    query = update.callback_query
+    if query:
+        query.answer()
+    context.user_data["delivery_comment"] = (
+        update.message.text if update.message else ""
+    )
+    show_delivery_date(update, context)
+    return ConversationHandler.END
+
+
+def show_delivery_date(update: Update, context: CallbackContext):
+    query = update.callback_query
+    today = dt.datetime.today()
+    buttons = []
+    if dt.datetime.now().hour < WOKRDAY_END:
+        day_start = 1
+    else:
+        day_start = 2
+    for day in range(day_start, day_start + 9):
+        date = today + dt.timedelta(days=day)
+        delivery_date = date.strftime("%m.%d")
+        buttons.append(
+            InlineKeyboardButton(
+                delivery_date, callback_data=f"delivery_date_{delivery_date}"
+            )
+        )
+    if query:
+        query.answer()
+        query.edit_message_text(
+            text="Выберете дату доставки:",
+            reply_markup=InlineKeyboardMarkup(
+                build_button_table(buttons, cols=3)
+            ),
+        )
+    else:
+        chat_id = update.effective_chat.id
+        context.bot.send_message(
+            chat_id=chat_id,
+            text="Выберете дату доставки:",
+            reply_markup=InlineKeyboardMarkup(
+                build_button_table(buttons, cols=3)
+            ),
+        )
+
+
+def get_delivery_date(update: Update, context: CallbackContext):
+    query = update.callback_query
+    query.answer()
+    context.user_data["delivery_date"] = query.data.split("_")[-1]
+    show_delivery_time(update, context)
+
+
+def show_delivery_time(update: Update, context: CallbackContext):
+    query = update.callback_query
+    query.answer()
+    buttons = []
+    for hour in range(WORKDAY_START, WOKRDAY_END + 1):
+        buttons.append(
+            InlineKeyboardButton(
+                f"{hour:02}:00", callback_data=f"delivery_time_{hour}"
+            )
+        )
+    query.edit_message_text(
+        text="Выберете время доставки:",
+        reply_markup=InlineKeyboardMarkup(
+            build_button_table(buttons, cols=3)
+        ),
+    )
+
+
+def get_delivery_time(update: Update, context: CallbackContext):
+    query = update.callback_query
+    query.answer()
+    context.user_data["delivery_time"] = query.data.split("_")[-1]
+    breakpoint()
+    context.user_data["get_number_in_progress"] = True
     keyboard = [
         [
             KeyboardButton(
-                "Поделиться номером", request_contact=True,
+                "Поделиться номером",
+                request_contact=True,
             )
         ]
     ]
@@ -101,26 +200,31 @@ def get_comment(update: Update, context: CallbackContext):
     context.bot.send_message(
         chat_id=chat_id,
         text="""Укажите Ваш номер телефона с помощью нажатия на кнопку снизу,
-    либо предоставьте контакт клиента""", reply_markup=ReplyKeyboardMarkup(keyboard, resize_keyboard=True, one_time_keyboard=True))
+    либо предоставьте контакт клиента""",
+        reply_markup=ReplyKeyboardMarkup(
+            keyboard, resize_keyboard=True, one_time_keyboard=True
+        ),
+    )
+
 
 def get_phone_number(update: Update, context: CallbackContext):
-    if context.user_data.get('get_number_in_progress'):
+    if context.user_data.get("get_number_in_progress"):
         user = update.message.contact
         if update.message.contact:
             ReplyKeyboardRemove(True)
-            context.user_data['get_number_in_progress'] = False
+            context.user_data["get_number_in_progress"] = False
             # if user.user_id != context.user_data['client_id']:
-                # create_client(user.user_id, user.first_name, user.last_name)
-            context.user_data['client_id'] = user.user_id    
+            # create_client(user.user_id, user.first_name, user.last_name)
+            context.user_data["client_id"] = user.user_id
             check_and_add_phone_number(user.user_id, user.phone_number)
             # make_appointment(update, context)
+
 
 def make_order(update: Update, context: CallbackContext):
     pass
 
 
 def handlers_register(updater: Updater):
-    updater.dispatcher.add_handler(MessageHandler(Filters.contact & ~Filters.command, get_phone_number))
     updater.dispatcher.add_handler(
         ConversationHandler(
             entry_points=[
@@ -143,18 +247,25 @@ def handlers_register(updater: Updater):
                     )
                 ],
                 "get_comment": [
+                    CallbackQueryHandler(
+                        get_comment, pattern="^skip_comment$"
+                    ),
                     MessageHandler(
                         Filters.text & ~Filters.command, get_comment
-                    )
+                    ),
                 ],
-                "get_phone_number": [
-                    MessageHandler(
-                        Filters.contact & ~Filters.command, get_phone_number
-                    )
-                ]
             },
             fallbacks=[],
         )
+    )
+    updater.dispatcher.add_handler(
+        MessageHandler(Filters.contact & ~Filters.command, get_phone_number)
+    )
+    updater.dispatcher.add_handler(
+        CallbackQueryHandler(get_delivery_date, pattern="^delivery_date_")
+    )
+    updater.dispatcher.add_handler(
+        CallbackQueryHandler(get_delivery_time, pattern="^delivery_time_")
     )
 
     return updater.dispatcher
