@@ -1,54 +1,42 @@
-from environs import Env
 from requests import get
 from urllib.parse import urlparse
+from django.conf import settings
 
 
 def is_shorten_url(url):
     return 'vk.cc' in url
 
 
-def get_shortened_link(token, url):
-    payload = {'v': '5.199', 'access_token': token, 'url': url}
+def get_shortened_link(url):
+    token = settings.VK_API_TOKEN
+    payload = {'v': '5.236', 'access_token': token, 'url': url}
     response = get('https://api.vk.ru/method/utils.getShortLink',
                             params=payload)
     response.raise_for_status()
-
+    if not response.json().get('response'):
+        return 'error'
     short_url = response.json()['response']['short_url']
-
     return short_url
 
 
-def get_link_click_count(token, url):
+def get_link_click_count(url):
+    if 'vk.cc' not in url:
+        return 0
+    token = settings.VK_API_TOKEN
+    parsed_url = urlparse(url).path.lstrip('/')
     payload = {
-    	'v': '5.199',
+    	'v': '5.236',
     	'access_token': token,
-    	'key': url,
-        'interval': 'week'
+    	'key': parsed_url,
     }
     response = get('https://api.vk.ru/method/utils.getLinkStats',
                             params=payload)
     response.raise_for_status()
-
-    if len(response.json()['response']['stats']) > 0:
+    if response.json().get('response') and len(response.json()['response']['stats']) > 0:
         click_count = response.json()['response']['stats'][0]['views']
     else:
-        click_count = 0
-    
+        click_count = 0    
     return click_count
-
-
-def get_short_link_and_click_count(url: str):
-    env = Env()
-    env.read_env()
-    token = env.str('VK_TOKEN')
-    
-    if not is_shorten_url(url):
-        url = get_shortened_link(token, url)
-    
-    parsed_url = urlparse(url).path.lstrip('/')
-    click_count = get_link_click_count(token, parsed_url)
-    
-    return url, click_count
 
 
 # https://metanit.com/python/django/5.14.php - https://vk.cc/czLk7z

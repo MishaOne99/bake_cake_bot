@@ -21,6 +21,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 BOT_TOKEN = os.environ.get('BOT_TOKEN')
 
+VK_API_TOKEN = os.environ.get('VK_API_TOKEN')
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
