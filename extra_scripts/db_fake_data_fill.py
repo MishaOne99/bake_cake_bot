@@ -10,7 +10,6 @@ import django
 django.setup()
 
 from datacenter.models import (
-    Address,
     AdvLink,
     Berry,
     Cake,

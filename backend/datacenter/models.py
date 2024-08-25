@@ -166,7 +166,7 @@ class Order(models.Model):
         verbose_name="Адрес доставки",
         max_length=200,
         null=True,
-        blank=True,
+        blank=True
     )
     invoice = models.ForeignKey(
         Invoice, on_delete=models.PROTECT, verbose_name="Счет на оплату"

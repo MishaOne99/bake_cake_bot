@@ -3,7 +3,6 @@ from django.contrib import admin
 from .vc_api import get_link_click_count, get_shortened_link
 
 from .models import (
-    Address,
     AdvLink,
     Berry,
     Cake,
@@ -36,7 +35,6 @@ class AdvLinkAdmin(admin.ModelAdmin):
             obj.short_url = get_shortened_link(obj.url)
             obj.save()
 
-admin.site.register(Address)
 admin.site.register(Berry)
 admin.site.register(Cake)
 admin.site.register(Client)
