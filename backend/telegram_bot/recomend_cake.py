@@ -1,4 +1,4 @@
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update, Bot
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import (
     CallbackContext,
     CallbackQueryHandler,
@@ -23,9 +23,16 @@ def unshow_cake_start(update, context):
     context.bot.delete_message(chat_id=chat_id, message_id=message_id)
     start(update, context)
 
+def unshow_cake_order(update, context):
+    query = update.callback_query
+    query.answer()    
+    chat_id = query.message.chat_id
+    message_id = query.message.message_id
+    context.bot.delete_message(chat_id=chat_id, message_id=message_id)
+    # order(update, context)
 
-def show_cake(update: Update, context: CallbackContext,
-              back_step_callback: str, next_step_callback: str, cake: dict):
+
+def show_cake(update: Update, context: CallbackContext, cake: dict):
     query = update.callback_query
     query.answer()
     chat_id = query.message.chat_id
@@ -66,5 +73,8 @@ def handlers_register(updater: Updater):
     )
     updater.dispatcher.add_handler(
         CallbackQueryHandler(unshow_cake_start, pattern="^unshow_cake_start$")
+    )
+    updater.dispatcher.add_handler(
+        CallbackQueryHandler(unshow_cake_order, pattern="^unshow_cake_order$")
     )
     return updater.dispatcher
