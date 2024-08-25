@@ -4,10 +4,7 @@ from telegram.ext import CallbackContext, CallbackQueryHandler, Updater
 from .common_handler_functions import build_button_table
 from .db_querrys import get_cake, get_presets_cakes, get_random_preset_cake
 
-
 def list_cakes(update: Update, context: CallbackContext):
-    # context.user_data["salon_id"] = None
-    # context.user_data["specialist_id"] = None
     query = update.callback_query
     query.answer()
     cakes = get_presets_cakes()
@@ -19,10 +16,21 @@ def list_cakes(update: Update, context: CallbackContext):
         )
         for cake in cakes
     ]
-    query.edit_message_text(
-        text="Готовые торты:",
-        reply_markup=InlineKeyboardMarkup(build_button_table(buttons, cols=2)),
-    )
+    back_button = [InlineKeyboardButton("Назад", callback_data='start')]
+    buttons = build_button_table(buttons, cols=2)
+    buttons.append(back_button)
+    buttons_markup = InlineKeyboardMarkup(buttons)
+    try:
+        query.edit_message_text(
+            text="Готовые торты:",
+            reply_markup=buttons_markup,
+        )
+    except(Exception):
+        context.bot.send_message(
+            text="Готовые торты:",
+            reply_markup=buttons_markup,
+            chat_id=update.effective_chat.id
+        )
 
 
 def recomend_cake(update: Update, context: CallbackContext):
@@ -33,16 +41,21 @@ def recomend_cake(update: Update, context: CallbackContext):
     show_cake(update, context)
 
 
-def unshow_cake(update, context):
+def unshow_cake_list_cakes(update, context):
     query = update.callback_query
     query.answer()
     chat_id = query.message.chat_id
     message_id = query.message.message_id
     context.bot.delete_message(chat_id=chat_id, message_id=message_id)
-    context.bot.send_message("")
-    update.callback_query = context.user_data["cake_showed_back_step"]
-    context.user_data["cake_showed_back_step"] = None
+    list_cakes(update, context)
 
+def unshow_cake_order(update, context):
+    query = update.callback_query
+    query.answer()
+    chat_id = query.message.chat_id
+    message_id = query.message.message_id
+    context.bot.delete_message(chat_id=chat_id, message_id=message_id)
+    # order
 
 def show_cake(update: Update, context: CallbackContext):
     query = update.callback_query
@@ -66,16 +79,15 @@ def show_cake(update: Update, context: CallbackContext):
 
         Цена: {cake.price} рублей
         """
-    context.user_data["cake_showed_back_step"] = "start"
     # Определяем кнопки
     keyboard = [
         [
             InlineKeyboardButton(
                 "Назад",
-                callback_data=context.user_data["cake_showed_back_step"],
+                callback_data='unshow_cake_list_cakes',
             ),
         ],
-        [InlineKeyboardButton("Выбрать", callback_data="unshow_cake")],
+        [InlineKeyboardButton("Выбрать", callback_data="unshow_cake_order")],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     # Отправляем новое сообщение с изображением и кнопками
@@ -95,9 +107,9 @@ def handlers_register(updater: Updater):
         CallbackQueryHandler(show_cake, pattern="^cake_id_")
     )
     updater.dispatcher.add_handler(
-        CallbackQueryHandler(recomend_cake, pattern="^recomend_cake$")
+        CallbackQueryHandler(unshow_cake_order, pattern="^unshow_cake_order$")
     )
     updater.dispatcher.add_handler(
-        CallbackQueryHandler(unshow_cake, pattern="^unshow_cake$")
+        CallbackQueryHandler(unshow_cake_list_cakes, pattern="^unshow_cake_list_cakes$")
     )
     return updater.dispatcher
