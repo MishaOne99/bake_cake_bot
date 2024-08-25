@@ -25,16 +25,6 @@ def unshow_recomend_cake_start(update, context):
     context.bot.delete_message(chat_id=chat_id, message_id=message_id)
     start(update, context)
 
-def unshow_recomend_cake_order(update, context):
-    query = update.callback_query
-    query.answer()    
-    chat_id = query.message.chat_id
-    message_id = query.message.message_id
-    context.bot.delete_message(chat_id=chat_id, message_id=message_id)
-    get_data_for_cake(update, context)
-    # order(update, context)
-
-
 def show_cake(update: Update, context: CallbackContext, cake: dict):
     query = update.callback_query
     query.answer()
@@ -58,7 +48,7 @@ def show_cake(update: Update, context: CallbackContext, cake: dict):
     # Определяем кнопки
     keyboard = [
         [InlineKeyboardButton("Назад", callback_data='unshow_recomend_cake_start'),],
-        [InlineKeyboardButton("Выбрать", callback_data='unshow_recomend_cake_order')]
+        [InlineKeyboardButton("Заказать", callback_data='get_data_for_cake')]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     # Отправляем новое сообщение с изображением и кнопками
@@ -76,8 +66,5 @@ def handlers_register(updater: Updater):
     )
     updater.dispatcher.add_handler(
         CallbackQueryHandler(unshow_recomend_cake_start, pattern="^unshow_recomend_cake_start$")
-    )
-    updater.dispatcher.add_handler(
-        CallbackQueryHandler(unshow_recomend_cake_order, pattern="^unshow_recomend_cake_order$")
     )
     return updater.dispatcher

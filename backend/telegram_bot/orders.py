@@ -51,6 +51,9 @@ def get_data_for_cake(update: Update, context: CallbackContext):
             reply_markup=InlineKeyboardMarkup(button),
         )
     except(Exception):
+        chat_id = query.message.chat_id
+        message_id = query.message.message_id
+        context.bot.delete_message(chat_id=chat_id, message_id=message_id)
         context.bot.send_message(
             text="Хотите сделать надпись на торте? Укажите в сообщении",
             reply_markup=InlineKeyboardMarkup(button),

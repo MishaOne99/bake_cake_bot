@@ -50,14 +50,6 @@ def unshow_cake_list_cakes(update, context):
     context.bot.delete_message(chat_id=chat_id, message_id=message_id)
     list_cakes(update, context)
 
-def unshow_cake_order(update, context):
-    query = update.callback_query
-    query.answer()
-    chat_id = query.message.chat_id
-    message_id = query.message.message_id
-    context.bot.delete_message(chat_id=chat_id, message_id=message_id)
-    get_data_for_cake(update, context)
-
 def show_cake(update: Update, context: CallbackContext):
     query = update.callback_query
     query.answer()
@@ -88,7 +80,7 @@ def show_cake(update: Update, context: CallbackContext):
                 callback_data='unshow_cake_list_cakes',
             ),
         ],
-        [InlineKeyboardButton("Выбрать", callback_data="unshow_cake_order")],
+        [InlineKeyboardButton("Заказать", callback_data="get_data_for_cake")],
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     # Отправляем новое сообщение с изображением и кнопками
@@ -106,9 +98,6 @@ def handlers_register(updater: Updater):
     )
     updater.dispatcher.add_handler(
         CallbackQueryHandler(show_cake, pattern="^cake_id_")
-    )
-    updater.dispatcher.add_handler(
-        CallbackQueryHandler(unshow_cake_order, pattern="^unshow_cake_order$")
     )
     updater.dispatcher.add_handler(
         CallbackQueryHandler(unshow_cake_list_cakes, pattern="^unshow_cake_list_cakes$")
