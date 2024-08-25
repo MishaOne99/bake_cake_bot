@@ -3,6 +3,7 @@ from telegram.ext import CallbackContext, CallbackQueryHandler, Updater
 
 from .common_handler_functions import build_button_table
 from .db_querrys import get_cake, get_presets_cakes, get_random_preset_cake
+from .orders import get_data_for_cake
 
 def list_cakes(update: Update, context: CallbackContext):
     query = update.callback_query
@@ -55,7 +56,7 @@ def unshow_cake_order(update, context):
     chat_id = query.message.chat_id
     message_id = query.message.message_id
     context.bot.delete_message(chat_id=chat_id, message_id=message_id)
-    # order
+    get_data_for_cake(update, context)
 
 def show_cake(update: Update, context: CallbackContext):
     query = update.callback_query

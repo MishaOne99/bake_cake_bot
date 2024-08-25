@@ -13,6 +13,13 @@ from datacenter.models import (
 )
 
 
+def check_and_add_phone_number(id, phone_num):
+    if not Client.objects.filter(id_tg=id, phone_number=phone_num).exists():
+        client = Client.objects.get(id_tg=id)
+        client.phone_number = phone_num
+        client.save()
+
+
 def get_time_frame():
     return TimeFrames.objects.first()
 
