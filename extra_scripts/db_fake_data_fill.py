@@ -23,110 +23,110 @@ from datacenter.models import (
     Topping,
 )
 
-# РЎРѕР·РґР°РЅРёРµ РІСЂРµРјРµРЅРЅС‹С… СЂР°РјРѕРє (РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ)
+# Создание временных рамок (по умолчанию)
 TimeFrames.objects.create()
 
-# РЎРѕР·РґР°РЅРёРµ РєР»РёРµРЅС‚РѕРІ
+# Создание клиентов
 Client.objects.create(
-    id_tg=100, full_name="Р РѕРјР°РЅ", phone_number="+79004217012"
+    id_tg=100, full_name="Роман", phone_number="+79004217012"
 )
-Client.objects.create(id_tg=101, full_name="Р•РіРѕСЂ", phone_number="+79004216012")
+Client.objects.create(id_tg=101, full_name="Егор", phone_number="+79004216012")
 Client.objects.create(
-    id_tg=102, full_name="РђР»РµРєСЃР°РЅРґСЂ", phone_number="+79004215012"
-)
-Client.objects.create(
-    id_tg=103, full_name="РќРёРєРѕР»Р°Р№", phone_number="+79004214012"
+    id_tg=102, full_name="Александр", phone_number="+79004215012"
 )
 Client.objects.create(
-    id_tg=104, full_name="Р’РёРєС‚РѕСЂРёСЏ", phone_number="+79004213012"
+    id_tg=103, full_name="Николай", phone_number="+79004214012"
 )
 Client.objects.create(
-    id_tg=105, full_name="Р•Р»РёР·Р°РІРµС‚Р°", phone_number="+79004212012"
+    id_tg=104, full_name="Виктория", phone_number="+79004213012"
 )
 Client.objects.create(
-    id_tg=106, full_name="РљСЂРёСЃС‚РёРЅР°", phone_number="+79004211012"
+    id_tg=105, full_name="Елизавета", phone_number="+79004212012"
+)
+Client.objects.create(
+    id_tg=106, full_name="Кристина", phone_number="+79004211012"
 )
 
-# РЎРѕР·РґР°РЅРёРµ СѓСЂРѕРІРЅРµР№
-Level.objects.create(title="1 СѓСЂРѕРІРµРЅСЊ", price=400)
-Level.objects.create(title="2 СѓСЂРѕРІРЅСЏ", price=750)
-Level.objects.create(title="3 СѓСЂРѕРІРЅСЏ", price=1100)
+# Создание уровней
+Level.objects.create(title="1 уровень", price=400)
+Level.objects.create(title="2 уровня", price=750)
+Level.objects.create(title="3 уровня", price=1100)
 
-# РЎРѕР·РґР°РЅРёРµ С„РѕСЂРј
-Form.objects.create(title="РљРІР°РґСЂР°С‚", price=600)
-Form.objects.create(title="РљСЂСѓРі", price=400)
-Form.objects.create(title="РџСЂСЏРјРѕСѓРіРѕР»СЊРЅРёРє", price=1000)
+# Создание форм
+Form.objects.create(title="Квадрат", price=600)
+Form.objects.create(title="Круг", price=400)
+Form.objects.create(title="Прямоугольник", price=1000)
 
-# РЎРѕР·РґР°РЅРёРµ С‚РѕРїРїРёРЅРіРѕРІ
-Topping.objects.create(title="Р‘РµР· С‚РѕРїРїРёРЅРіР°", price=0)
-Topping.objects.create(title="Р‘РµР»С‹Р№ СЃРѕСѓСЃ", price=200)
-Topping.objects.create(title="РљР°СЂР°РјРµР»СЊРЅС‹Р№ СЃРёСЂРѕРї", price=180)
-Topping.objects.create(title="РљР»РµРЅРѕРІС‹Р№ СЃРёСЂРѕРї", price=200)
-Topping.objects.create(title="РљР»СѓР±РЅРёС‡РЅС‹Р№ СЃРёСЂРѕРї", price=300)
-Topping.objects.create(title="Р§РµСЂРЅРёС‡РЅС‹Р№ СЃРёСЂРѕРї", price=350)
-Topping.objects.create(title="РњРѕР»РѕС‡РЅС‹Р№ С€РѕРєРѕР»Р°Рґ", price=200)
+# Создание топпингов
+Topping.objects.create(title="Без топпинга", price=0)
+Topping.objects.create(title="Белый соус", price=200)
+Topping.objects.create(title="Карамельный сироп", price=180)
+Topping.objects.create(title="Кленовый сироп", price=200)
+Topping.objects.create(title="Клубничный сироп", price=300)
+Topping.objects.create(title="Черничный сироп", price=350)
+Topping.objects.create(title="Молочный шоколад", price=200)
 
-# РЎРѕР·РґР°РЅРёРµ СЏРіРѕРґ
-Berry.objects.create(title="Р•Р¶РµРІРёРєР°", price=400)
-Berry.objects.create(title="РњР°Р»РёРЅР°", price=300)
-Berry.objects.create(title="Р“РѕР»СѓР±РёРєР°", price=450)
-Berry.objects.create(title="РљР»СѓР±РЅРёРєР°", price=500)
+# Создание ягод
+Berry.objects.create(title="Ежевика", price=400)
+Berry.objects.create(title="Малина", price=300)
+Berry.objects.create(title="Голубика", price=450)
+Berry.objects.create(title="Клубника", price=500)
 
-# РЎРѕР·РґР°РЅРёРµ РґРµРєРѕСЂР°
-Decor.objects.create(title="Р¤РёСЃС‚Р°С€РєРё", price=300)
-Decor.objects.create(title="Р‘РµР·Рµ", price=400)
-Decor.objects.create(title="Р¤СѓРЅРґСѓРє", price=350)
-Decor.objects.create(title="РџРµРєР°РЅ", price=300)
-Decor.objects.create(title="РњР°СЂС€РјРµР»Р»РѕСѓ", price=200)
-Decor.objects.create(title="РњР°СЂС†РёРїР°РЅ", price=280)
+# Создание декора
+Decor.objects.create(title="Фисташки", price=300)
+Decor.objects.create(title="Безе", price=400)
+Decor.objects.create(title="Фундук", price=350)
+Decor.objects.create(title="Пекан", price=300)
+Decor.objects.create(title="Маршмеллоу", price=200)
+Decor.objects.create(title="Марципан", price=280)
 
-# РЎРѕР·РґР°РЅРёРµ С‚РѕСЂС‚РѕРІ
+# Создание тортов
 # image_mapping = {
-#     "napoleon.jpg": "РќР°РїРѕР»РµРѕРЅ",
-#     "tiramisu.jpg": "РўРёСЂР°РјРёСЃСѓ",
-#     "krasnii-barkhat.jpg": "РљСЂР°СЃРЅС‹Р№ Р±Р°СЂС…Р°С‚",
-#     "medovik.jpg": "РњРµРґРѕРІРёРє",
-#     "shokoladnii-muss.jpg": "РЁРѕРєРѕР»Р°РґРЅС‹Р№ РјСѓСЃСЃ",
-#     "fruktovii-sad.jpg": "Р¤СЂСѓРєС‚РѕРІС‹Р№ СЃР°Рґ",
-#     "morkovnii-tort.jpg": "РњРѕСЂРєРѕРІРЅС‹Р№ С‚РѕСЂС‚",
-#     "vanilnoye-yabloko.jpg": "Р’Р°РЅРёР»СЊРЅРѕРµ РѕР±Р»Р°РєРѕ",
-#     "smetannik.jpg": "РЎРјРµС‚Р°РЅРЅРёРє",
-#     "praga.jpg": "РџСЂР°РіР°",
-#     "orekhoviy-ray.jpg": "РћСЂРµС…РѕРІС‹Р№ СЂР°Р№",
-#     "kappuchino.jpg": "РљР°РїСѓС‡РёРЅРѕ",
-#     "krem-bryule.jpg": "РљСЂРµРј-Р±СЂСЋР»Рµ",
-#     "custom.jpg": None,  # РџСЂРѕРїСѓСЃРє
+#     "napoleon.jpg": "Наполеон",
+#     "tiramisu.jpg": "Тирамису",
+#     "krasnii-barkhat.jpg": "Красный бархат",
+#     "medovik.jpg": "Медовик",
+#     "shokoladnii-muss.jpg": "Шоколадный мусс",
+#     "fruktovii-sad.jpg": "Фруктовый сад",
+#     "morkovnii-tort.jpg": "Морковный торт",
+#     "vanilnoye-yabloko.jpg": "Ванильное облако",
+#     "smetannik.jpg": "Сметанник",
+#     "praga.jpg": "Прага",
+#     "orekhoviy-ray.jpg": "Ореховый рай",
+#     "kappuchino.jpg": "Капучино",
+#     "krem-bryule.jpg": "Крем-брюле",
+#     "custom.jpg": None,  # Пропуск
 # }
 
-# РґР»СЏ С‚РµСЃС‚РѕРІ
+# для тестов
 image_mapping = {
-    "https://narodny-konditer.ru/img/gall/big/516.jpg": "РќР°РїРѕР»РµРѕРЅ",
-    "https://narodny-konditer.ru/img/gall/big/513.jpg": "РўРёСЂР°РјРёСЃСѓ",
-    "https://narodny-konditer.ru/img/gall/big/1124.jpg": "РљСЂР°СЃРЅС‹Р№ Р±Р°СЂС…Р°С‚",
-    "https://narodny-konditer.ru/img/gall/big/1018.jpg": "РњРµРґРѕРІРёРє",
-    "https://narodny-konditer.ru/img/gall/big/1078.jpg": "РЁРѕРєРѕР»Р°РґРЅС‹Р№ РјСѓСЃСЃ",
-    "https://narodny-konditer.ru/img/gall/big/1445.jpg": "Р¤СЂСѓРєС‚РѕРІС‹Р№ СЃР°Рґ",
-    "https://narodny-konditer.ru/img/gall/big/480.jpg": "РњРѕСЂРєРѕРІРЅС‹Р№ С‚РѕСЂС‚",
-    "https://narodny-konditer.ru/img/gall/big/1075.jpg": "Р’Р°РЅРёР»СЊРЅРѕРµ РѕР±Р»Р°РєРѕ",
-    "https://narodny-konditer.ru/img/gall/big/1072.jpg": "РЎРјРµС‚Р°РЅРЅРёРє",
-    "https://narodny-konditer.ru/img/gall/big/1448.jpg": "РџСЂР°РіР°",
-    "https://narodny-konditer.ru/img/gall/big/1063.jpg": "РћСЂРµС…РѕРІС‹Р№ СЂР°Р№",
-    "https://narodny-konditer.ru/img/gall/big/492.jpg": "РљР°РїСѓС‡РёРЅРѕ",
-    "https://narodny-konditer.ru/img/gall/big/1102.jpg": "РљСЂРµРј-Р±СЂСЋР»Рµ",
-    "https://narodny-konditer.ru/img/gall/big/531.jpg": None,  # РџСЂРѕРїСѓСЃРє
+    "https://narodny-konditer.ru/img/gall/big/516.jpg": "Наполеон",
+    "https://narodny-konditer.ru/img/gall/big/513.jpg": "Тирамису",
+    "https://narodny-konditer.ru/img/gall/big/1124.jpg": "Красный бархат",
+    "https://narodny-konditer.ru/img/gall/big/1018.jpg": "Медовик",
+    "https://narodny-konditer.ru/img/gall/big/1078.jpg": "Шоколадный мусс",
+    "https://narodny-konditer.ru/img/gall/big/1445.jpg": "Фруктовый сад",
+    "https://narodny-konditer.ru/img/gall/big/480.jpg": "Морковный торт",
+    "https://narodny-konditer.ru/img/gall/big/1075.jpg": "Ванильное облако",
+    "https://narodny-konditer.ru/img/gall/big/1072.jpg": "Сметанник",
+    "https://narodny-konditer.ru/img/gall/big/1448.jpg": "Прага",
+    "https://narodny-konditer.ru/img/gall/big/1063.jpg": "Ореховый рай",
+    "https://narodny-konditer.ru/img/gall/big/492.jpg": "Капучино",
+    "https://narodny-konditer.ru/img/gall/big/1102.jpg": "Крем-брюле",
+    "https://narodny-konditer.ru/img/gall/big/531.jpg": None,  # Пропуск
 }
 
 cake_captions = [
-    "РЎ Р”РЅС‘Рј Р РѕР¶РґРµРЅРёСЏ!",
-    "Р›СЋР±Р»СЋ С‚РµР±СЏ!",
-    "РЎР»Р°РґРєР°СЏ Р¶РёР·РЅСЊ",
-    "РЎС‡Р°СЃС‚СЊСЏ Рё СЂР°РґРѕСЃС‚Рё!",
-    "Р’СЃРµРіРґР° РІРјРµСЃС‚Рµ",
-    "Р›СѓС‡С€РёР№ РґРµРЅСЊ!",
-    "РЎ СЋР±РёР»РµРµРј!",
-    "Р”РѕСЂРѕРіРѕР№ РјР°РјРµ",
-    "Р’РµС‡РЅР°СЏ Р»СЋР±РѕРІСЊ",
-    "РќР° РґРѕР»РіСѓСЋ РїР°РјСЏС‚СЊ",
+    "С Днём Рождения!",
+    "Люблю тебя!",
+    "Сладкая жизнь",
+    "Счастья и радости!",
+    "Всегда вместе",
+    "Лучший день!",
+    "С юбилеем!",
+    "Дорогой маме",
+    "Вечная любовь",
+    "На долгую память",
 ]
 
 levels = list(Level.objects.all())
@@ -159,13 +159,13 @@ for image, title in image_mapping.items():
     )
 
 addresses = [
-    "РњРѕСЃРєРІР°, РўРІРµСЂСЃРєР°СЏ, 21, РєРІ. 23",
-    "РњРѕСЃРєРІР°, РљСЂР°СЃРЅРѕРїСЂРµСЃРЅРµРЅСЃРєР°СЏ, 46, РєРІ. 355",
-    "Р›СЋР±РµСЂС†С‹, РћРєС‚СЏР±СЂСЊСЃРєРёР№ РїСЂРѕСЃРїРµРєС‚, 101, РєРІ. 123",
-    "РҐРёРјРєРё, РљР°Р»РёРЅРёРЅР°, 4Рђ, РєРІ. 145",
-    "РћРґРёРЅС†РѕРІРѕ, РњР°СЂС€Р°Р»Р° Р–СѓРєРѕРІР°, 46, РєРІ. 299"
+    "Москва, Тверская, 21, кв. 23",
+    "Москва, Краснопресненская, 46, кв. 355",
+    "Люберцы, Октябрьский проспект, 101, кв. 123",
+    "Химки, Калинина, 4А, кв. 145",
+    "Одинцово, Маршала Жукова, 46, кв. 299"
 ]
-# РЎРѕР·РґР°РЅРёРµ Р·Р°РєР°Р·РѕРІ
+# Создание заказов
 cakes = Cake.objects.all()
 clients = list(Client.objects.all())
 
@@ -186,6 +186,7 @@ for cake in cakes:
         client=client,
         status="paid",
         receipt=receipt,
+        amount=cake.price
     )
     invoice = Invoice.objects.last()
 
@@ -199,13 +200,13 @@ for cake in cakes:
         delivery_time=delivery_time,
         delivery_address=address,
         invoice=invoice,
-        comment="РќР°Р±СЂР°С‚СЊ Р·Р° С‡Р°СЃ РґРѕ РїСЂРёРµР·РґР°. Р’ РґРІРµСЂСЊ РїРѕСЃС‚СѓС‡Р°С‚СЊ 3 СЂР°Р·Р°"
+        comment="Набрать за час до приезда. В дверь постучать 3 раза"
         if cake.title
         in [
-            "РќР°РїРѕР»РµРѕРЅ",
-            "РўРёСЂР°РјРёСЃСѓ",
-            "РљСЂР°СЃРЅС‹Р№ Р±Р°СЂС…Р°С‚",
-            "РњРµРґРѕРІРёРє",
+            "Наполеон",
+            "Тирамису",
+            "Красный бархат",
+            "Медовик",
         ]
         else "",
     )

@@ -135,6 +135,7 @@ class Invoice(models.Model):
     receipt = models.URLField("Чек", blank=True, null=True)
     created_at = models.DateTimeField("Счёт выставлен", auto_now_add=True)
     updated_at = models.DateTimeField("Последнее обновление", auto_now=True)
+    amount = models.FloatField("Сумма чека")
 
     def __str__(self) -> str:
         return f"{self.updated_at} {self.client.full_name} {self.status}"
@@ -151,7 +152,7 @@ class Order(models.Model):
         ("closed", "Закрыт"),
         ("canceled", "Отменен"),
     ]
-    status = models.CharField("Статус заказа", max_length=9, choices=STATUSES)
+    status = models.CharField("Статус заказа", max_length=9, choices=STATUSES, default="accepted")
     date = models.DateField("Дата заказа", auto_now_add=True)
     time = models.TimeField("Время заказа", auto_now_add=True)
     client = models.ForeignKey(

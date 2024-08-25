@@ -74,7 +74,7 @@ def start(update: Update, context: CallbackContext):
         [InlineKeyboardButton("Готовые торты", callback_data="list_cakes")],
         [InlineKeyboardButton("Рекомендуем", callback_data="recomend_cake")],
         [InlineKeyboardButton("Собрать свой торт", callback_data="make_cake")],
-        [InlineKeyboardButton("Заказы", callback_data="orders")],
+        [InlineKeyboardButton("Заказы", callback_data="show_orders")],
     ]
     start_message = f"""Здравствуйте!
 Заказы обрабатываются от {MINIMUM_LEDA_TIME} рабочих часов.

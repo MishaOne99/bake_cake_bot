@@ -13,6 +13,8 @@ from datacenter.models import (
     Invoice
 )
 
+import datetime as dt
+
 
 def check_and_add_phone_number(id, phone_num):
     if not Client.objects.filter(id_tg=id, phone_number=phone_num).exists():
@@ -24,13 +26,15 @@ def check_and_add_phone_number(id, phone_num):
 def get_time_frame():
     return TimeFrames.objects.first()
 
+def get_orders_by_client(client_id):
+    return Order.objects.filter(client__id_tg=client_id, status="accepted")
 
 def create_order(client, cake, delivery_date, delivery_time, delivery_address, invoice, comment):
     order = Order.objects.create(
         client=client,
         cake=cake,
-        delivery_date=delivery_date,
-        delivery_time=delivery_time,
+        delivery_date=dt.datetime.strptime(delivery_date, "%Y-%m-%d").date(),
+        delivery_time=dt.datetime.strptime(delivery_time, "%H").time(),
         delivery_address=delivery_address,
         invoice=invoice,
         comment=comment
@@ -45,9 +49,17 @@ def check_client(id):
 def get_client(id):
     return Client.objects.get(id_tg__exact=id)
 
-def create_invoice(client):
+def create_invoice(client, cake_price, delivery_date, delivery_time):
+    time_frame = get_time_frame()
+    date = dt.datetime.strptime(delivery_date, "%Y-%m-%d").date()
+    time = dt.datetime.strptime(delivery_time, "%H").time()
+    delivery_datetime = dt.datetime.combine(date, time)
+    hours_on_delivery = (delivery_datetime - dt.datetime.now()).total_seconds() / 3600
+    if hours_on_delivery <= time_frame.maximum_expedited_lead_time:
+        cake_price*=1.2
     invoice = Invoice.objects.create(
-        client=client
+        client=client,
+        amount=cake_price
     )
     return invoice
 
@@ -113,6 +125,8 @@ def get_berries():
 
 
 def get_berry(id):
+    if not id:
+        return None
     return Berry.objects.get(id=id)
 
 
@@ -121,4 +135,6 @@ def get_decors():
 
 
 def get_decor(id):
+    if not id:
+        return None
     return Decor.objects.get(id=id)

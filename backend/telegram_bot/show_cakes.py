@@ -3,7 +3,7 @@ from telegram.ext import CallbackContext, CallbackQueryHandler, Updater
 
 from .common_handler_functions import build_button_table
 from .db_querrys import get_cake, get_presets_cakes, get_random_preset_cake
-from .orders import get_data_for_cake
+
 
 def list_cakes(update: Update, context: CallbackContext):
     query = update.callback_query
@@ -32,14 +32,6 @@ def list_cakes(update: Update, context: CallbackContext):
             reply_markup=buttons_markup,
             chat_id=update.effective_chat.id
         )
-
-
-def recomend_cake(update: Update, context: CallbackContext):
-    cake = get_random_preset_cake()
-    context.user_data["cake_showed_back_step"] = "start"
-    context.user_data["cake_showed_next_step"] = "v"
-    context.user_data["cake_id"] = cake.id
-    show_cake(update, context)
 
 
 def unshow_cake_list_cakes(update, context):

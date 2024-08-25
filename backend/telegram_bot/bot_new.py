@@ -7,10 +7,11 @@ from telegram.ext import (
 )
 
 from .start import handlers_register as start_reg
-from .make_cake import handlers_custom_cake_register
+from .make_cake import handlers_custom_cake_register as make_cake
 from .show_cakes import handlers_register as show_cakes
 from .recomend_cake import handlers_register as recomend_cake
-from .orders import handlers_register as make_order
+from .order import handlers_register as make_order
+from .show_orders import handlers_register as show_orders
 
 
 logging.basicConfig(
@@ -25,7 +26,8 @@ def main():
     updater.dispatcher = start_reg(updater)
     updater.dispatcher = show_cakes(updater)
     updater.dispatcher = recomend_cake(updater)
-    updater.dispatcher = handlers_custom_cake_register(updater)
+    updater.dispatcher = make_cake(updater)
     updater.dispatcher = make_order(updater)
+    updater.dispatcher = show_orders(updater)
     updater.start_polling()
     updater.idle()

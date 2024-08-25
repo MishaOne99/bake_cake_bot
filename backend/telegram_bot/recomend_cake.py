@@ -11,7 +11,6 @@ from .db_querrys import (
 
 from .start import start
 
-from .orders import get_data_for_cake
 
 def recomend_cake(update: Update, context: CallbackContext):
     cake = get_random_preset_cake()
