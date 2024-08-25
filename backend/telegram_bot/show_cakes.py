@@ -2,7 +2,7 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import CallbackContext, CallbackQueryHandler, Updater
 
 from .common_handler_functions import build_button_table
-from .db_querrys import get_cake, get_presets_cakes, get_random_preset_cake
+from .db_querrys import get_cake, get_presets_cakes
 
 
 def list_cakes(update: Update, context: CallbackContext):

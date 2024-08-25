@@ -41,6 +41,8 @@ from .db_querrys import (
 from .start import (
     WOKRDAY_END,
     WORKDAY_START,
+    MINIMUM_LEDA_TIME,
+    MAXIMUM_EXPEDITED_LEAD_TIME
 )
 
 ADMIN_ID = 283670670
@@ -73,24 +75,90 @@ def get_cake_caption(update: Update, context: CallbackContext):
     context.user_data["cake_caption"] = (
         update.message.text if update.message else ""
     )
+    show_delivery_address(update, context)
+    return "DELIVERY_ADDRESS"
+
+def show_delivery_address(update: Update, context: CallbackContext):
     query = update.callback_query
     if query:
         query.answer()
         query.edit_message_text(
-            "Укажите адрес доставки:",
+            "Напишите в чат адрес доставки",
         )
-    else:
-        context.bot.send_message(
-            chat_id=update.effective_chat.id,
-            text="Укажите адрес доставки:",
-        )
-    return "DELIVERY_ADDRESS"
 
 
 def get_delivery_address(update: Update, context: CallbackContext):
     context.user_data["delivery_address"] = update.message.text
+    show_delivery_date(update, context)
+    return "DELIVERY_DATE"
+
+
+def show_delivery_date(update: Update, context: CallbackContext):
+    # query = update.callback_query
+    # chat_id = query.message.chat_id
+    # message_id = query.message.message_id
+    # context.bot.delete_message(chat_id=chat_id, message_id=message_id)
+    today = dt.datetime.today()
+    buttons = []
+    
+    if dt.datetime.now().hour < WOKRDAY_END:
+        day_start = 1
+    else:
+        day_start = 2
+    for day in range(day_start, day_start + 9):
+        date = today + dt.timedelta(days=day)
+        delivery_date = date.strftime("%m-%d")
+        buttons.append(
+            InlineKeyboardButton(
+                delivery_date, callback_data=f"delivery_date_{delivery_date}"
+            )
+        )
+    chat_id = update.effective_chat.id
+    context.bot.send_message(
+        chat_id=chat_id,
+        text=f"""Выберете дату доставки.
+Просим учесть, что минимальное время доставки: {MINIMUM_LEDA_TIME} часов
+Цена доставки до {MAXIMUM_EXPEDITED_LEAD_TIME} часов будет увеличена на 20%""",
+        reply_markup=InlineKeyboardMarkup(
+            build_button_table(buttons, cols=3)
+        ),
+    )
+
+
+def get_delivery_date(update: Update, context: CallbackContext):
+    query = update.callback_query
+    query.answer()
+    context.user_data["delivery_date"] = query.data.split("_")[-1]
+    show_delivery_time(update, context)
+    return "DELIVERY_TIME"
+
+
+def show_delivery_time(update: Update, context: CallbackContext):
+    query = update.callback_query
+    buttons = []
+    for hour in range(WORKDAY_START, WOKRDAY_END + 1):
+        buttons.append(
+            InlineKeyboardButton(
+                f"{hour:02}:00", callback_data=f"delivery_time_{hour}"
+            )
+        )
+    query.edit_message_text(
+        text=f"""Выберете время доставки.
+Просим учесть, что минимальное время доставки: {MINIMUM_LEDA_TIME} часов
+Цена доставки до {MAXIMUM_EXPEDITED_LEAD_TIME} часов будет увеличена на 20%""",
+        reply_markup=InlineKeyboardMarkup(
+            build_button_table(buttons, cols=3)
+        ),
+    )
+
+
+def get_delivery_time(update: Update, context: CallbackContext):
+    query = update.callback_query
+    query.answer()
+    context.user_data["delivery_time"] = query.data.split("_")[-1]
     show_comment_fetch(update, context)
-    return "COMMENT"
+    return 'COMMENT'
+    
 
 def show_comment_fetch(update, context):
     query = update.callback_query
@@ -119,79 +187,12 @@ def get_comment(update: Update, context: CallbackContext):
     context.user_data["delivery_comment"] = (
         update.message.text if update.message else ""
     )
-    show_delivery_date(update, context)
-    return "DELIVERY_DATE"
-
-
-def show_delivery_date(update: Update, context: CallbackContext):
-    query = update.callback_query
-    today = dt.datetime.today()
-    buttons = []
-    if dt.datetime.now().hour < WOKRDAY_END:
-        day_start = 1
-    else:
-        day_start = 2
-    for day in range(day_start, day_start + 9):
-        date = today + dt.timedelta(days=day)
-        delivery_date = date.strftime("%m-%d")
-        buttons.append(
-            InlineKeyboardButton(
-                delivery_date, callback_data=f"delivery_date_{delivery_date}"
-            )
-        )
-    if query:
-        query.answer()
-        query.edit_message_text(
-            text="Выберете дату доставки:",
-            reply_markup=InlineKeyboardMarkup(
-                build_button_table(buttons, cols=3)
-            ),
-        )
-    else:
-        chat_id = update.effective_chat.id
-        context.bot.send_message(
-            chat_id=chat_id,
-            text="Выберете дату доставки:",
-            reply_markup=InlineKeyboardMarkup(
-                build_button_table(buttons, cols=3)
-            ),
-        )
-
-
-def get_delivery_date(update: Update, context: CallbackContext):
-    query = update.callback_query
-    query.answer()
-    context.user_data["delivery_date"] = query.data.split("_")[-1]
-    show_delivery_time(update, context)
-    return "DELIVERY_TIME"
-
-
-def show_delivery_time(update: Update, context: CallbackContext):
-    query = update.callback_query
-    buttons = []
-    for hour in range(WORKDAY_START, WOKRDAY_END + 1):
-        buttons.append(
-            InlineKeyboardButton(
-                f"{hour:02}:00", callback_data=f"delivery_time_{hour}"
-            )
-        )
-    query.edit_message_text(
-        text="Выберете время доставки:",
-        reply_markup=InlineKeyboardMarkup(
-            build_button_table(buttons, cols=3)
-        ),
-    )
-
-
-def get_delivery_time(update: Update, context: CallbackContext):
-    query = update.callback_query
-    query.answer()
-    context.user_data["delivery_time"] = query.data.split("_")[-1]
     show_phone_number(update, context)
-    return 'PHONE_NUMBER'
+    return "PHONE_NUMBER"
     
 
 def show_phone_number(update: Update, context: CallbackContext):
+    query = update.callback_query
     keyboard = [
         [
             KeyboardButton(
@@ -200,6 +201,9 @@ def show_phone_number(update: Update, context: CallbackContext):
             )
         ]
     ]
+    chat_id = query.message.chat_id
+    message_id = query.message.message_id
+    context.bot.delete_message(chat_id=chat_id, message_id=message_id)
     chat_id = update.effective_chat.id
     context.bot.send_message(
         chat_id=chat_id,
@@ -210,6 +214,7 @@ def show_phone_number(update: Update, context: CallbackContext):
         ),
     )
 
+
 def get_phone_number(update: Update, context: CallbackContext):
     user = update.message.contact
     if update.message.contact:
@@ -218,6 +223,7 @@ def get_phone_number(update: Update, context: CallbackContext):
         context.user_data["client_id"] = user.user_id
         check_and_add_phone_number(user.user_id, user.phone_number)
         make_order(update, context)
+
 
 def make_order(update: Update, context: CallbackContext):
     if not context.user_data.get('preset_cake') and not context.user_data.get('recomend_cake'):
@@ -240,27 +246,32 @@ def make_order(update: Update, context: CallbackContext):
     delivery_address = context.user_data["delivery_address"]
     invoice = create_invoice(client, cake.price, delivery_date, delivery_time)
     order = create_order(client,cake,delivery_date, delivery_time, delivery_address, invoice, delivery_comment)
-    context.bot.send_message(chat_id=ADMIN_ID, text=f"""
-Заказ №{order.id}:
-Торт: {cake.title or 'сборный'}
-Уровни: {cake.level.title}
-Форма: {cake.form.title}
-Топпинг: {cake.topping.title}
-Ягода: {cake.berry and cake.berry.title or '-'}
-Декор: {cake.decor and cake.decor.title or '-'}
-Надпись: {cake.caption or '-'}
+    send_order(update, context, order)
+    order_end(update, context)
 
-Цена: {invoice.amount}
+
+def send_order(update, context, order):
+        context.bot.send_message(chat_id=ADMIN_ID, text=f"""
+Заказ №{order.id}:
+Торт: {order.cake.title or 'сборный'}
+Уровни: {order.cake.level.title}
+Форма: {order.cake.form.title}
+Топпинг: {order.cake.topping.title}
+Ягода: {order.cake.berry and order.cake.berry.title or '-'}
+Декор: {order.cake.decor and order.cake.decor.title or '-'}
+Надпись: {order.cake.caption or '-'}
+
+Цена: {order.invoice.amount}
 
 Доставка:
-{delivery_date} в {delivery_time}
-Адрес: {delivery_address}
-Комментарий: {delivery_comment}
+{order.delivery_date} в {order.delivery_time}
+Адрес: {order.delivery_address}
+Комментарий: {order.comment}
 
 Номер телефона:
-{client.phone_number}""")
-    order_end(update, context)
-    
+{order.client.phone_number}""")
+
+
 def order_end(update: Update, context: CallbackContext):
     query = update.callback_query
     button = [
@@ -280,6 +291,7 @@ def order_end(update: Update, context: CallbackContext):
             reply_markup=InlineKeyboardMarkup(button),
         )
     return ConversationHandler.END
+
 
 def handlers_register(updater: Updater):
     updater.dispatcher.add_handler(
@@ -324,5 +336,4 @@ def handlers_register(updater: Updater):
             fallbacks=[],
         )
     )
-
     return updater.dispatcher
