@@ -1,7 +1,7 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import CallbackContext, CallbackQueryHandler, Updater
 
-from .common_handler_functions import build_button_table
+from .common_functions import build_button_table
 from .db_querrys import (
     get_berries,
     get_berry,

@@ -25,7 +25,7 @@ from telegram.ext import (
     Updater,
 )
 
-from .common_handler_functions import build_button_table
+from .common_functions import build_button_table
 from .db_querrys import (
     check_and_add_phone_number,
     create_cake,
@@ -207,8 +207,7 @@ def show_phone_number(update: Update, context: CallbackContext):
     chat_id = update.effective_chat.id
     context.bot.send_message(
         chat_id=chat_id,
-        text="""Укажите Ваш номер телефона с помощью нажатия на кнопку снизу,
-    либо предоставьте контакт клиента""",
+        text="""Укажите Ваш номер телефона с помощью нажатия на кнопку снизу, либо предоставьте контакт клиента""",
         reply_markup=ReplyKeyboardMarkup(
             keyboard, resize_keyboard=True, one_time_keyboard=True
         ),

@@ -1,7 +1,7 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import CallbackContext, CallbackQueryHandler, Updater
 
-from .common_handler_functions import build_button_table
+from .common_functions import build_button_table
 from .db_querrys import get_cake, get_presets_cakes
 
 
@@ -66,14 +66,14 @@ def show_cake(update: Update, context: CallbackContext):
         """
     context.user_data['preset_cake'] = cake
     # Определяем кнопки
-    keyboard = [
+    keyboard = [        
+        [InlineKeyboardButton("Заказать", callback_data="get_data_for_cake")],
         [
             InlineKeyboardButton(
                 "Назад",
                 callback_data='unshow_cake_list_cakes',
             ),
-        ],
-        [InlineKeyboardButton("Заказать", callback_data="get_data_for_cake")],
+        ]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     # Отправляем новое сообщение с изображением и кнопками

@@ -45,9 +45,9 @@ def show_cake(update: Update, context: CallbackContext, cake: dict):
     context.user_data['recomend_cake'] = cake
 
     # Определяем кнопки
-    keyboard = [
-        [InlineKeyboardButton("Назад", callback_data='unshow_recomend_cake_start'),],
-        [InlineKeyboardButton("Заказать", callback_data='get_data_for_cake')]
+    keyboard = [    
+        [InlineKeyboardButton("Заказать", callback_data='get_data_for_cake')],
+        [InlineKeyboardButton("Назад", callback_data='unshow_recomend_cake_start')]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
     # Отправляем новое сообщение с изображением и кнопками
