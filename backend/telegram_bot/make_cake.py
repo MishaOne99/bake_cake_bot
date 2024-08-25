@@ -223,7 +223,7 @@ def show_assembled_cake(update: Update, context: CallbackContext):
         [
             InlineKeyboardButton(
                 "Заказать",
-                callback_data="order",
+                callback_data="get_data_for_cake",
             )
         ],
         [

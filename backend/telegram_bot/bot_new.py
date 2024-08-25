@@ -10,6 +10,7 @@ from .start import handlers_register as start_reg
 from .make_cake import handlers_custom_cake_register
 from .show_cakes import handlers_register as show_cakes
 from .recomend_cake import handlers_register as recomend_cake
+from .orders import handlers_register as make_order
 
 
 logging.basicConfig(
@@ -25,5 +26,6 @@ def main():
     updater.dispatcher = show_cakes(updater)
     updater.dispatcher = recomend_cake(updater)
     updater.dispatcher = handlers_custom_cake_register(updater)
+    updater.dispatcher = make_order(updater)
     updater.start_polling()
     updater.idle()
