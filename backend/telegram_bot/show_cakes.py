@@ -72,6 +72,7 @@ def show_cake(update: Update, context: CallbackContext):
 
         Цена: {cake.price} рублей
         """
+    context.user_data['preset_cake'] = cake
     # Определяем кнопки
     keyboard = [
         [

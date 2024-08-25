@@ -159,18 +159,16 @@ for image, title in image_mapping.items():
         caption=caption,
     )
 
-Address.objects.create(city="Москва", street="Тверская, 21", flat=23)
-Address.objects.create(city="Москва", street="Краснопресненская, 46", flat=355)
-Address.objects.create(
-    city="Люберцы", street="Октябрьский проспект, 101", flat=123
-)
-Address.objects.create(city="Химки", street="Калинина, 4А", flat=145)
-Address.objects.create(city="Одинцово", street="Маршала Жукова, 46", flat=299)
-
+addresses = [
+    "Москва, Тверская, 21, кв. 23",
+    "Москва, Краснопресненская, 46, кв. 355",
+    "Люберцы, Октябрьский проспект, 101, кв. 123",
+    "Химки, Калинина, 4А, кв. 145",
+    "Одинцово, Маршала Жукова, 46, кв. 299"
+]
 # Создание заказов
 cakes = Cake.objects.all()
 clients = list(Client.objects.all())
-addresses = list(Address.objects.all())
 
 for cake in cakes:
     client = random.choice(clients)

@@ -131,8 +131,8 @@ class Invoice(models.Model):
     client = models.ForeignKey(
         Client, on_delete=models.PROTECT, verbose_name="Клиент"
     )
-    status = models.CharField("Статус счета", max_length=14, choices=STATUS)
-    receipt = models.URLField("Чек", blank=True)
+    status = models.CharField("Статус счета", max_length=14, choices=STATUS, default="waiting")
+    receipt = models.URLField("Чек", blank=True, null=True)
     created_at = models.DateTimeField("Счёт выставлен", auto_now_add=True)
     updated_at = models.DateTimeField("Последнее обновление", auto_now=True)
 
@@ -144,18 +144,6 @@ class Invoice(models.Model):
         verbose_name_plural = "Счета на оплату"
 
 
-class Address(models.Model):
-    city = models.CharField("Город", max_length=200)
-    street = models.CharField("Улица, номер дома", max_length=200)
-    flat = models.IntegerField("Номер квартиры", null=True, blank=True)
-
-    def __str__(self) -> str:
-        return f"{self.city}, {self.street}-{self.flat}"
-
-    class Meta:
-        verbose_name = "Адрес"
-        verbose_name_plural = "Адреса"
-
 
 class Order(models.Model):
     STATUSES = [
@@ -164,8 +152,8 @@ class Order(models.Model):
         ("canceled", "Отменен"),
     ]
     status = models.CharField("Статус заказа", max_length=9, choices=STATUSES)
-    date = models.DateField("Дата заказа")
-    time = models.TimeField("Время заказа")
+    date = models.DateField("Дата заказа", auto_now_add=True)
+    time = models.TimeField("Время заказа", auto_now_add=True)
     client = models.ForeignKey(
         Client, on_delete=models.PROTECT, verbose_name="Клиент"
     )
@@ -174,10 +162,9 @@ class Order(models.Model):
     )
     delivery_date = models.DateField("Дата доставки")
     delivery_time = models.TimeField("Время доставки")
-    delivery_address = models.ForeignKey(
-        Address,
-        on_delete=models.PROTECT,
+    delivery_address = models.TextField(
         verbose_name="Адрес доставки",
+        max_length=200,
         null=True,
         blank=True,
     )

@@ -10,6 +10,7 @@ from datacenter.models import (
     Order,
     TimeFrames,
     Topping,
+    Invoice
 )
 
 
@@ -24,15 +25,17 @@ def get_time_frame():
     return TimeFrames.objects.first()
 
 
-def create_order(client):
-    return Order.objects.create(client=client, status="waiting")
-
-
-def check_and_add_phone_number(id, phone_num):
-    if not Client.objects.filter(id_tg=id, phone_number=phone_num).exists():
-        client = Client.objects.get(id_tg=id)
-        client.phone_number = phone_num
-        client.save()
+def create_order(client, cake, delivery_date, delivery_time, delivery_address, invoice, comment):
+    order = Order.objects.create(
+        client=client,
+        cake=cake,
+        delivery_date=delivery_date,
+        delivery_time=delivery_time,
+        delivery_address=delivery_address,
+        invoice=invoice,
+        comment=comment
+    )
+    return order
 
 
 def check_client(id):
@@ -42,6 +45,23 @@ def check_client(id):
 def get_client(id):
     return Client.objects.get(id_tg__exact=id)
 
+def create_invoice(client):
+    invoice = Invoice.objects.create(
+        client=client
+    )
+    return invoice
+
+def create_cake(level, form, topping, berry=None, decor=None, caption=None):
+    cake = Cake.objects.create(
+        price=level.price+form.price+topping.price+((berry and berry.price) or 0)+((decor and decor.price) or 0),
+        level=level,
+        form=form,
+        topping=topping,
+        berry=berry,
+        decor=decor,
+        caption=caption        
+    )
+    return cake
 
 def create_client(id, first_name, last_name, username=None, phone_number=None):
     Client.objects.create(

@@ -27,16 +27,15 @@ from telegram.ext import (
 from .common_handler_functions import build_button_table
 from .db_querrys import (
     check_and_add_phone_number,
-    get_berries,
+    create_cake,
     get_berry,
     get_decor,
-    get_decors,
     get_form,
-    get_forms,
     get_level,
-    get_levels,
     get_topping,
-    get_toppings,
+    get_client,
+    create_invoice,
+    create_order
 )
 from .start import (
     MAXIMUM_EXPEDITED_LEAD_TIME,
@@ -81,7 +80,7 @@ def get_cake_caption(update: Update, context: CallbackContext):
         )
     else:
         context.bot.send_message(
-            chat_id=chat_id,
+            chat_id=update.effective_chat.id,
             text="Укажите адрес доставки:",
         )
 
@@ -118,8 +117,7 @@ def get_comment(update: Update, context: CallbackContext):
     context.user_data["delivery_comment"] = (
         update.message.text if update.message else ""
     )
-    show_delivery_date(update, context)
-    return ConversationHandler.END
+    return 'show_delivery_date'
 
 
 def show_delivery_date(update: Update, context: CallbackContext):
@@ -162,6 +160,7 @@ def get_delivery_date(update: Update, context: CallbackContext):
     query.answer()
     context.user_data["delivery_date"] = query.data.split("_")[-1]
     show_delivery_time(update, context)
+    return "show_delivery_time"
 
 
 def show_delivery_time(update: Update, context: CallbackContext):
@@ -205,6 +204,7 @@ def get_delivery_time(update: Update, context: CallbackContext):
             keyboard, resize_keyboard=True, one_time_keyboard=True
         ),
     )
+    return "get_phone_number"
 
 
 def get_phone_number(update: Update, context: CallbackContext):
@@ -213,15 +213,36 @@ def get_phone_number(update: Update, context: CallbackContext):
         if update.message.contact:
             ReplyKeyboardRemove(True)
             context.user_data["get_number_in_progress"] = False
-            # if user.user_id != context.user_data['client_id']:
-            # create_client(user.user_id, user.first_name, user.last_name)
             context.user_data["client_id"] = user.user_id
             check_and_add_phone_number(user.user_id, user.phone_number)
-            # make_appointment(update, context)
+    return 'make_order'
 
+def sending_order_info():
+    pass
 
 def make_order(update: Update, context: CallbackContext):
-    pass
+    if not context.user_data.get('preset_cake') and not context.user_data.get('recomend_cake'):
+        decor = get_decor(context.user_data["cake_decor_id"])
+        level = get_level(context.user_data["cake_level_id"])
+        form = get_form(context.user_data["cake_form_id"])
+        topping = get_topping(context.user_data["cake_topping_id"])
+        berry = get_berry(context.user_data["cake_berry_id"])
+        cake = create_cake(level, form, topping, berry, decor, caption=context.user_data.get("cake_caption") )
+    elif(context.user_data.get('recomend_cake')):
+        cake = context.user_data.get('recomend_cake')
+    elif(context.user_data.get('preset_cake')):
+        cake = context.user_data.get('preset_cake')
+    client_id = context.user_data["client_id"]
+    invoice = create_invoice(client_id)
+    client = get_client(client_id)
+    phone_number = client.phone_number
+    delivery_comment = context.user_data["delivery_comment"]
+    delivery_time = context.user_data["delivery_time"]
+    delivery_date = context.user_data["delivery_date"]
+    delivery_address = context.user_data["delivery_address"]
+    order = create_order(client,cake,delivery_date, delivery_time, delivery_address, invoice, delivery_comment)
+    return ConversationHandler.END
+    
 
 
 def handlers_register(updater: Updater):
@@ -254,18 +275,24 @@ def handlers_register(updater: Updater):
                         Filters.text & ~Filters.command, get_comment
                     ),
                 ],
+                "get_phone_number": [
+                    MessageHandler(Filters.contact & ~Filters.command, get_phone_number)
+                ],
+                "show_delivery_date":[
+                    CallbackQueryHandler(get_delivery_date, pattern="^show_delivery_date$")
+                ],
+                "show_delivery_time":[
+                    CallbackQueryHandler(get_delivery_date, pattern="^show_delivery_time$")
+                ],
+                "get_delivery_date":[
+                    CallbackQueryHandler(get_delivery_date, pattern="^delivery_date_")
+                ],
+                "get_delivery_time":[
+                    CallbackQueryHandler(get_delivery_date, pattern="^delivery_time_")
+                ]
             },
             fallbacks=[],
         )
-    )
-    updater.dispatcher.add_handler(
-        MessageHandler(Filters.contact & ~Filters.command, get_phone_number)
-    )
-    updater.dispatcher.add_handler(
-        CallbackQueryHandler(get_delivery_date, pattern="^delivery_date_")
-    )
-    updater.dispatcher.add_handler(
-        CallbackQueryHandler(get_delivery_time, pattern="^delivery_time_")
     )
 
     return updater.dispatcher
