@@ -152,7 +152,22 @@ def get_delivery_date(update: Update, context: CallbackContext):
 def show_delivery_time(update: Update, context: CallbackContext):
     query = update.callback_query
     buttons = []
-    for hour in range(WORKDAY_START, WOKRDAY_END + 1):
+    delivery_date = context.user_data["delivery_date"]
+    current_date = dt.datetime.now()
+    delivery_date = f"{current_date.year}-{delivery_date}"
+    delivery_date = dt.datetime.strptime(delivery_date, "%Y-%m-%d")
+    day_diff = (delivery_date - current_date).total_seconds() / 86400
+    current_hour = current_date.hour
+    current_minute = current_date.minute
+    if WORKDAY_START <= current_hour < WOKRDAY_END and day_diff <= 1:
+        if current_minute:
+            start_hour = current_hour + 1
+        else:
+            start_hour = current_hour
+    else:
+        start_hour = WORKDAY_START
+    end_hour = WOKRDAY_END + 1
+    for hour in range(start_hour, end_hour):
         buttons.append(
             InlineKeyboardButton(
                 f"{hour:02}:00", callback_data=f"delivery_time_{hour}"
