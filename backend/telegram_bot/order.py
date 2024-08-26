@@ -23,12 +23,7 @@ from .db_querrys import (
     check_and_add_phone_number,
     create_invoice,
     create_order,
-    get_berry,
     get_client,
-    get_decor,
-    get_form,
-    get_level,
-    get_topping,
 )
 from .start import (
     MAXIMUM_EXPEDITED_LEAD_TIME,
@@ -261,6 +256,8 @@ def get_phone_number(update: Update, context: CallbackContext):
         check_and_add_phone_number(user.user_id, user.phone_number)
         make_order(update, context)
 
+    return ConversationHandler.END
+
 
 def make_order(update: Update, context: CallbackContext):
     cake = context.user_data["cake_for_order"]
@@ -329,7 +326,6 @@ def order_end(update: Update, context: CallbackContext):
             text="Заказ принят",
             reply_markup=InlineKeyboardMarkup(button),
         )
-    return ConversationHandler.END
 
 
 def handlers_register(updater: Updater):
