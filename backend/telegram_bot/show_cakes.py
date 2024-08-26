@@ -5,6 +5,7 @@ from .common_functions import build_button_table
 from .db_querrys import get_cake, get_presets_cakes, get_random_preset_cake
 from .start import start
 
+from django.conf import settings
 
 def list_cakes(update: Update, context: CallbackContext):
     query = update.callback_query
@@ -67,7 +68,7 @@ def show_cake(update: Update, context: CallbackContext):
     chat_id = query.message.chat_id
     message_id = query.message.message_id
     context.bot.delete_message(chat_id=chat_id, message_id=message_id)
-    image_url = cake.image.url
+    image_url = f'{settings.SITE_URL}{cake.image.url}'
     caption = f"""Торт {cake.title}
         Количество уровней: {cake.level.title}
         Форма: {cake.form.title}
