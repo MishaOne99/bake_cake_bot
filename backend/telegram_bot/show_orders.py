@@ -14,9 +14,9 @@ def show_orders(update: Update, context: CallbackContext):
         query.edit_message_text(
             text="У вас отсутствуют активные заказы.",
             reply_markup=buttons_markup,
-        )   
+        )
     else:
-        message = """"""
+        message = ""
         for order in orders:
             message = f"""{message}\n
 Заказ №{order.id}:

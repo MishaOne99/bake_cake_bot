@@ -131,7 +131,9 @@ class Invoice(models.Model):
     client = models.ForeignKey(
         Client, on_delete=models.PROTECT, verbose_name="Клиент"
     )
-    status = models.CharField("Статус счета", max_length=14, choices=STATUS, default="waiting")
+    status = models.CharField(
+        "Статус счета", max_length=14, choices=STATUS, default="waiting"
+    )
     receipt = models.URLField("Чек", blank=True, null=True)
     created_at = models.DateTimeField("Счёт выставлен", auto_now_add=True)
     updated_at = models.DateTimeField("Последнее обновление", auto_now=True)
@@ -145,14 +147,15 @@ class Invoice(models.Model):
         verbose_name_plural = "Счета на оплату"
 
 
-
 class Order(models.Model):
     STATUSES = [
         ("accepted", "Принят"),
         ("closed", "Закрыт"),
         ("canceled", "Отменен"),
     ]
-    status = models.CharField("Статус заказа", max_length=9, choices=STATUSES, default="accepted")
+    status = models.CharField(
+        "Статус заказа", max_length=9, choices=STATUSES, default="accepted"
+    )
     date = models.DateField("Дата заказа", auto_now_add=True)
     time = models.TimeField("Время заказа", auto_now_add=True)
     client = models.ForeignKey(
@@ -164,10 +167,7 @@ class Order(models.Model):
     delivery_date = models.DateField("Дата доставки")
     delivery_time = models.TimeField("Время доставки")
     delivery_address = models.TextField(
-        verbose_name="Адрес доставки",
-        max_length=200,
-        null=True,
-        blank=True
+        verbose_name="Адрес доставки", max_length=200, null=True, blank=True
     )
     invoice = models.ForeignKey(
         Invoice, on_delete=models.PROTECT, verbose_name="Счет на оплату"
@@ -211,12 +211,9 @@ class TimeFrames(models.Model):
 
 class AdvLink(models.Model):
     url = models.URLField("Ссылка")
-    short_url = models.URLField('Сокращенная ссылка', blank=True)
-    visits_number = models.IntegerField(
-        "Количество визитов",
-        default=0
-    )
+    short_url = models.URLField("Сокращенная ссылка", blank=True)
+    visits_number = models.IntegerField("Количество визитов", default=0)
 
     class Meta:
-        verbose_name = "Рекламную ссылку"
+        verbose_name = "Рекламная ссылка"
         verbose_name_plural = "Рекламные ссылки"

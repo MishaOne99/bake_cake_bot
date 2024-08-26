@@ -246,7 +246,7 @@ def show_assembled_cake(update: Update, context: CallbackContext):
     )
 
 
-def handlers_custom_cake_register(updater: Updater):
+def handlers_register(updater: Updater):
     updater.dispatcher.add_handler(
         CallbackQueryHandler(choose_levels, pattern="^make_cake$")
     )
