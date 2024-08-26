@@ -65,12 +65,11 @@ py backend/manage.py runbot
 
 Пример корректной работы админки:
 
-![image](https://github.com/user-attachments/assets/caadada5-6653-485e-a93d-5badd5468d4a)
+![djangoAdmin](https://github.com/user-attachments/assets/06013e4c-6ed9-4650-a879-40119a0c4f8a)
 
 Пример работы бота:
 
 ![example](https://github.com/user-attachments/assets/a97802c8-f1f1-46ad-b0ec-66bceb0a8916)
-
 
 ### Цель проекта
 
