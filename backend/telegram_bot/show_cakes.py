@@ -67,7 +67,7 @@ def show_cake(update: Update, context: CallbackContext):
     chat_id = query.message.chat_id
     message_id = query.message.message_id
     context.bot.delete_message(chat_id=chat_id, message_id=message_id)
-    image_url = cake.image.name
+    image_url = cake.image.url
     caption = f"""Торт {cake.title}
         Количество уровней: {cake.level.title}
         Форма: {cake.form.title}

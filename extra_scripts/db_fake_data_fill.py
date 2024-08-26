@@ -81,40 +81,40 @@ Decor.objects.create(title="Маршмеллоу", price=200)
 Decor.objects.create(title="Марципан", price=280)
 
 # Создание тортов
-# image_mapping = {
-#     "napoleon.jpg": "Наполеон",
-#     "tiramisu.jpg": "Тирамису",
-#     "krasnii-barkhat.jpg": "Красный бархат",
-#     "medovik.jpg": "Медовик",
-#     "shokoladnii-muss.jpg": "Шоколадный мусс",
-#     "fruktovii-sad.jpg": "Фруктовый сад",
-#     "morkovnii-tort.jpg": "Морковный торт",
-#     "vanilnoye-yabloko.jpg": "Ванильное облако",
-#     "smetannik.jpg": "Сметанник",
-#     "praga.jpg": "Прага",
-#     "orekhoviy-ray.jpg": "Ореховый рай",
-#     "kappuchino.jpg": "Капучино",
-#     "krem-bryule.jpg": "Крем-брюле",
-#     "custom.jpg": None,  # Пропуск
-# }
+image_mapping = {
+     "napoleon.jpg": "Наполеон",
+     "tiramisu.jpg": "Тирамису",
+     "krasnii-barkhat.jpg": "Красный бархат",
+     "medovik.jpg": "Медовик",
+     "shokoladnii-muss.jpg": "Шоколадный мусс",
+     "fruktovii-sad.jpg": "Фруктовый сад",
+     "morkovnii-tort.jpg": "Морковный торт",
+     "vanilnoye-yabloko.jpg": "Ванильное облако",
+     "smetannik.jpg": "Сметанник",
+     "praga.jpg": "Прага",
+     "orekhoviy-ray.jpg": "Ореховый рай",
+     "kappuchino.jpg": "Капучино",
+     "krem-bryule.jpg": "Крем-брюле",
+     "custom.jpg": None,  # Пропуск
+}
 
 # для тестов
-image_mapping = {
-    "https://narodny-konditer.ru/img/gall/big/516.jpg": "Наполеон",
-    "https://narodny-konditer.ru/img/gall/big/513.jpg": "Тирамису",
-    "https://narodny-konditer.ru/img/gall/big/1124.jpg": "Красный бархат",
-    "https://narodny-konditer.ru/img/gall/big/1018.jpg": "Медовик",
-    "https://narodny-konditer.ru/img/gall/big/1078.jpg": "Шоколадный мусс",
-    "https://narodny-konditer.ru/img/gall/big/1445.jpg": "Фруктовый сад",
-    "https://narodny-konditer.ru/img/gall/big/480.jpg": "Морковный торт",
-    "https://narodny-konditer.ru/img/gall/big/1075.jpg": "Ванильное облако",
-    "https://narodny-konditer.ru/img/gall/big/1072.jpg": "Сметанник",
-    "https://narodny-konditer.ru/img/gall/big/1448.jpg": "Прага",
-    "https://narodny-konditer.ru/img/gall/big/1063.jpg": "Ореховый рай",
-    "https://narodny-konditer.ru/img/gall/big/492.jpg": "Капучино",
-    "https://narodny-konditer.ru/img/gall/big/1102.jpg": "Крем-брюле",
-    "https://narodny-konditer.ru/img/gall/big/531.jpg": None,  # Пропуск
-}
+#image_mapping = {
+#    "https://narodny-konditer.ru/img/gall/big/516.jpg": "Наполеон",
+###    "https://narodny-konditer.ru/img/gall/big/513.jpg": "Тирамису",
+#    "https://narodny-konditer.ru/img/gall/big/1124.jpg": "Красный бархат",
+#    "https://narodny-konditer.ru/img/gall/big/1018.jpg": "Медовик",
+#    "https://narodny-konditer.ru/img/gall/big/1078.jpg": "Шоколадный мусс",
+#    "https://narodny-konditer.ru/img/gall/big/1445.jpg": "Фруктовый сад",
+##    "https://narodny-konditer.ru/img/gall/big/480.jpg": "Морковный торт",
+#    "https://narodny-konditer.ru/img/gall/big/1075.jpg": "Ванильное облако",
+#    "https://narodny-konditer.ru/img/gall/big/1072.jpg": "Сметанник",
+##    "https://narodny-konditer.ru/img/gall/big/1448.jpg": "Прага",
+#    "https://narodny-konditer.ru/img/gall/big/1063.jpg": "Ореховый рай",
+#    "https://narodny-konditer.ru/img/gall/big/492.jpg": "Капучино",
+#    "https://narodny-konditer.ru/img/gall/big/1102.jpg": "Крем-брюле",
+#    "https://narodny-konditer.ru/img/gall/big/531.jpg": None,  # Пропуск
+#}
 
 cake_captions = [
     "С Днём Рождения!",
