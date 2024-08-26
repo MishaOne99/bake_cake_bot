@@ -69,7 +69,8 @@ py backend/manage.py runbot
 
 Пример работы бота:
 
-![example](https://github.com/user-attachments/assets/a97802c8-f1f1-46ad-b0ec-66bceb0a8916)
+![bace_cake_bot](https://github.com/user-attachments/assets/edae64d4-c9d1-4652-bf54-5fe03428eaac)
+
 
 ### Цель проекта
 
