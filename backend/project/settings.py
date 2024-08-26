@@ -25,6 +25,8 @@ BOT_TOKEN = os.environ.get("BOT_TOKEN")
 
 ADMIN_ID = os.environ.get("ADMIN_ID")
 
+SITE_URL = os.environ.get('SITE_URL')
+
 VK_API_TOKEN = os.environ.get("VK_API_TOKEN")
 
 # Quick-start development settings - unsuitable for production
