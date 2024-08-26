@@ -2,12 +2,7 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import CallbackContext, CallbackQueryHandler, Updater
 
 from .db_querrys import get_orders_by_client
-from .start import (
-    MAXIMUM_EXPEDITED_LEAD_TIME,
-    MINIMUM_LEDA_TIME,
-    WOKRDAY_END,
-    WORKDAY_START,
-)
+import datetime as dt
 
 
 def show_orders(update: Update, context: CallbackContext):
@@ -24,6 +19,12 @@ def show_orders(update: Update, context: CallbackContext):
     else:
         message = ""
         for order in orders:
+            delivery_datetime = dt.datetime.combine(
+                order.delivery_date, order.delivery_time
+            )
+            timeleft = int(
+                (delivery_datetime - dt.datetime.now()).total_seconds() / 3600
+            )
             message = f"""{message}\n
 Заказ №{order.id}:
     Торт: {order.cake.title or 'сборный'}
@@ -36,6 +37,7 @@ def show_orders(update: Update, context: CallbackContext):
 Цена: {order.invoice.amount}
 Доставка:
     {order.delivery_date} в {order.delivery_time}
+    Осталось: {timeleft} часов
     Адрес: {order.delivery_address}
     Комментарий: {order.comment}"""
         query.edit_message_text(
