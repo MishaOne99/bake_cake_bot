@@ -21,7 +21,6 @@ from telegram.ext import (
 from .common_functions import build_button_table
 from .db_querrys import (
     check_and_add_phone_number,
-    create_cake,
     create_invoice,
     create_order,
     get_berry,
@@ -45,8 +44,12 @@ def get_data_for_cake(update: Update, context: CallbackContext):
     query = update.callback_query
     query.answer()
     buttons = [
-        [InlineKeyboardButton("Пропустить", callback_data="skip_cake_caption")],
-        [InlineKeyboardButton("Главное меню", callback_data="start")]
+        [
+            InlineKeyboardButton(
+                "Пропустить", callback_data="skip_cake_caption"
+            )
+        ],
+        [InlineKeyboardButton("Главное меню", callback_data="start")],
     ]
     try:
         query.edit_message_text(
@@ -75,20 +78,22 @@ def get_cake_caption(update: Update, context: CallbackContext):
 
 def show_delivery_address(update: Update, context: CallbackContext):
     query = update.callback_query
-    button = [
+    buttons = [
         [InlineKeyboardButton("Назад", callback_data="get_data_for_cake")],
-        [InlineKeyboardButton("Главное меню", callback_data="start")]
+        [InlineKeyboardButton("Главное меню", callback_data="start")],
     ]
     if query:
         query.answer()
         query.edit_message_text(
             "Напишите в чат адрес доставки",
+            reply_markup=InlineKeyboardMarkup(buttons),
         )
     else:
         chat_id = update.effective_chat.id
         context.bot.send_message(
             chat_id=chat_id,
             text="Напишите в чат адрес доставки",
+            reply_markup=InlineKeyboardMarkup(buttons),
         )
 
 
@@ -118,13 +123,21 @@ def show_delivery_date(update: Update, context: CallbackContext):
                 delivery_date, callback_data=f"delivery_date_{delivery_date}"
             )
         )
+    buttons = build_button_table(buttons, cols=3)
+    buttons.append(
+        [InlineKeyboardButton("Назад", callback_data="show_delivery_address")]
+    )
+    buttons.append(
+        [InlineKeyboardButton("Главное меню", callback_data="start")]
+    )
+
     chat_id = update.effective_chat.id
     context.bot.send_message(
         chat_id=chat_id,
         text=f"""Выберете дату доставки.
 Просим учесть, что минимальное время доставки: {MINIMUM_LEDA_TIME} часов
 Цена доставки до {MAXIMUM_EXPEDITED_LEAD_TIME} часов будет увеличена на 20%""",
-        reply_markup=InlineKeyboardMarkup(build_button_table(buttons, cols=3)),
+        reply_markup=InlineKeyboardMarkup(buttons),
     )
 
 
@@ -145,11 +158,18 @@ def show_delivery_time(update: Update, context: CallbackContext):
                 f"{hour:02}:00", callback_data=f"delivery_time_{hour}"
             )
         )
+    buttons = build_button_table(buttons, cols=3)
+    buttons.append(
+        [InlineKeyboardButton("Назад", callback_data="show_delivery_date")]
+    )
+    buttons.append(
+        [InlineKeyboardButton("Главное меню", callback_data="start")]
+    )
     query.edit_message_text(
         text=f"""Выберете время доставки.
 Просим учесть, что минимальное время доставки: {MINIMUM_LEDA_TIME} часов
 Цена доставки до {MAXIMUM_EXPEDITED_LEAD_TIME} часов будет увеличена на 20%""",
-        reply_markup=InlineKeyboardMarkup(build_button_table(buttons, cols=3)),
+        reply_markup=InlineKeyboardMarkup(buttons),
     )
 
 
@@ -163,21 +183,23 @@ def get_delivery_time(update: Update, context: CallbackContext):
 
 def show_comment_fetch(update, context):
     query = update.callback_query
-    button = [
-        [InlineKeyboardButton("Пропустить", callback_data="skip_comment")]
+    buttons = [
+        [InlineKeyboardButton("Пропустить", callback_data="skip_comment")],
+        [InlineKeyboardButton("Назад", callback_data="show_delivery_time")],
+        [InlineKeyboardButton("Главное меню", callback_data="start")],
     ]
     if query:
         query.answer()
         query.edit_message_text(
             text="Комментарий для курьера",
-            reply_markup=InlineKeyboardMarkup(button),
+            reply_markup=InlineKeyboardMarkup(buttons),
         )
     else:
         chat_id = update.effective_chat.id
         context.bot.send_message(
             chat_id=chat_id,
             text="Комментарий для курьера",
-            reply_markup=InlineKeyboardMarkup(button),
+            reply_markup=InlineKeyboardMarkup(buttons),
         )
 
 
@@ -202,9 +224,9 @@ def show_phone_number(update: Update, context: CallbackContext):
             )
         ]
     ]
-    chat_id = query.message.chat_id
-    message_id = query.message.message_id
-    context.bot.delete_message(chat_id=chat_id, message_id=message_id)
+    # chat_id = query.message.chat_id
+    # message_id = query.message.message_id
+    # context.bot.delete_message(chat_id=chat_id, message_id=message_id)
     chat_id = update.effective_chat.id
     context.bot.send_message(
         chat_id=chat_id,
@@ -226,33 +248,16 @@ def get_phone_number(update: Update, context: CallbackContext):
 
 
 def make_order(update: Update, context: CallbackContext):
-    if not context.user_data.get("preset_cake") and not context.user_data.get(
-        "recomend_cake"
-    ):
-        level = get_level(context.user_data["cake_level_id"])
-        form = get_form(context.user_data["cake_form_id"])
-        topping = get_topping(context.user_data["cake_topping_id"])
-        decor = get_decor(context.user_data.get("cake_decor_id") or None)
-        berry = get_berry(context.user_data.get("cake_berry_id") or None)
-        cake = create_cake(
-            level,
-            form,
-            topping,
-            berry,
-            decor,
-            caption=context.user_data.get("cake_caption"),
-        )
-    elif context.user_data.get("recomend_cake"):
-        cake = context.user_data.get("recomend_cake")
-    elif context.user_data.get("preset_cake"):
-        cake = context.user_data.get("preset_cake")
+    cake = context.user_data["cake_for_order"]
+    cake.caption=context.user_data["cake_caption"]
+    cake.save()
     client_id = context.user_data["client_id"]
     client = get_client(client_id)
     delivery_comment = context.user_data["delivery_comment"]
     delivery_time = context.user_data["delivery_time"]
-    delivery_date = (
-        f'{dt.datetime.now().year}-{context.user_data["delivery_date"]}'
-    )
+    delivery_date = context.user_data["delivery_date"]
+    current_year = dt.datetime.today().year
+    delivery_date = f"{current_year}-{delivery_date}"
     delivery_address = context.user_data["delivery_address"]
     invoice = create_invoice(client, cake.price, delivery_date, delivery_time)
     order = create_order(
@@ -332,11 +337,35 @@ def handlers_register(updater: Updater):
                 "DELIVERY_ADDRESS": [
                     MessageHandler(
                         Filters.text & ~Filters.command, get_delivery_address
-                    )
+                    ),
+                    CallbackQueryHandler(
+                        get_data_for_cake, pattern="^get_data_for_cake$"
+                    ),
+                ],
+                "DELIVERY_DATE": [
+                    CallbackQueryHandler(
+                        get_delivery_date, pattern="^delivery_date_"
+                    ),
+                    CallbackQueryHandler(
+                        show_delivery_address,
+                        pattern="^show_delivery_address$",
+                    ),
+                ],
+                "DELIVERY_TIME": [
+                    CallbackQueryHandler(
+                        get_delivery_time, pattern="^delivery_time_"
+                    ),
+                    CallbackQueryHandler(
+                        show_delivery_date,
+                        pattern="^show_delivery_date$",
+                    ),
                 ],
                 "COMMENT": [
                     CallbackQueryHandler(
                         get_comment, pattern="^skip_comment$"
+                    ),
+                    CallbackQueryHandler(
+                        show_delivery_time, pattern="^show_delivery_time$"
                     ),
                     MessageHandler(
                         Filters.text & ~Filters.command, get_comment
@@ -345,17 +374,6 @@ def handlers_register(updater: Updater):
                 "PHONE_NUMBER": [
                     MessageHandler(
                         Filters.contact & ~Filters.command, get_phone_number
-                    )
-                ],
-
-                "DELIVERY_DATE": [
-                    CallbackQueryHandler(
-                        get_delivery_date, pattern="^delivery_date_"
-                    )
-                ],
-                "DELIVERY_TIME": [
-                    CallbackQueryHandler(
-                        get_delivery_time, pattern="^delivery_time_"
                     )
                 ],
             },

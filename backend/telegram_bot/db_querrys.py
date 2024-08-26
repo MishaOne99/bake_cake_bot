@@ -73,23 +73,6 @@ def create_invoice(client, cake_price, delivery_date, delivery_time):
     return invoice
 
 
-def create_cake(level, form, topping, berry=None, decor=None, caption=None):
-    cake = Cake.objects.create(
-        price=level.price
-        + form.price
-        + topping.price
-        + ((berry and berry.price) or 0)
-        + ((decor and decor.price) or 0),
-        level=level,
-        form=form,
-        topping=topping,
-        berry=berry,
-        decor=decor,
-        caption=caption,
-    )
-    return cake
-
-
 def create_client(id, first_name, last_name, username=None, phone_number=None):
     Client.objects.create(
         id_tg=id,

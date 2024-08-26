@@ -1,3 +1,4 @@
+from datacenter.models import Cake
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import CallbackContext, CallbackQueryHandler, Updater
 
@@ -207,6 +208,15 @@ def show_assembled_cake(update: Update, context: CallbackContext):
         + (berry.price if berry else 0)
         + (decor.price if decor else 0)
     )
+    cake, _ = Cake.objects.get_or_create(
+        price=price,
+        level=level,
+        form=form,
+        topping=topping,
+        berry=berry,
+        decor=decor,
+    )
+    context.user_data["cake_for_order"] = cake
     not_selected = "Не выбрано"
 
     message = f"""Торт
